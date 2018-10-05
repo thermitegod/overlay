@@ -7,7 +7,7 @@ DESCRIPTION="Simple application to read current clocks of ATi Radeon cards"
 HOMEPAGE="https://github.com/marazmista/radeon-profile"
 EGIT_REPO_URI="https://github.com/marazmista/radeon-profile.git"
 
-LICENSE="GPL-3"
+LICENSE=""
 SLOT="0"
 KEYWORDS=""
 IUSE=""
@@ -15,9 +15,9 @@ IUSE=""
 RDEPEND="
 	x11-libs/libdrm
 	x11-libs/libXrandr
-    dev-qt/qtcharts
+	dev-qt/qtcharts
 	x11-apps/mesa-progs
-    x11-apps/xdriinfo
+	x11-apps/xdriinfo
 	x11-apps/xrandr
 "
 src_configure() {

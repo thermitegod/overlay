@@ -7,7 +7,7 @@ DESCRIPTION="System daemon for reading info about Radeon GPU clocks and volts as
 HOMEPAGE="https://github.com/marazmista/radeon-profile-daemon"
 EGIT_REPO_URI="https://github.com/marazmista/radeon-profile-daemon.git"
 
-LICENSE="GPL-3"
+LICENSE=""
 SLOT="0"
 KEYWORDS=""
 IUSE=""
