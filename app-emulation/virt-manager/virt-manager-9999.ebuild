@@ -59,7 +59,6 @@ distutils-r1_python_compile() {
 	local defgraphics=
 
 	esetup.py configure \
-		--qemu-user=qemu \
 		--default-graphics=spice
 }
 
