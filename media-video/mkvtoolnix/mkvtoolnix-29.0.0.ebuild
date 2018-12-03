@@ -110,4 +110,6 @@ pkg_postinst() {
 	xdg_mimeinfo_database_update
 	xdg_desktop_database_update
 	gnome2_icon_cache_update
+	einfo "The option to disable display scaling is located at"
+	einfo "Preferences -> GUI -> Disable scaling for high DPI displays"
 }
