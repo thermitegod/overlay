@@ -25,6 +25,7 @@ RDEPEND="
 	>=dev-libs/boost-1.49.0:=
 	>=dev-libs/libebml-1.3.5:=
 	dev-libs/jsoncpp:=
+	dev-libs/libfmt
 	dev-libs/pugixml
 	media-libs/flac
 	>=media-libs/libmatroska-1.4.8:=
