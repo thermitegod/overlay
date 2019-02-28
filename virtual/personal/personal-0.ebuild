@@ -31,7 +31,6 @@ DEPEND="
 	dev-perl/EV
 	dev-perl/Guard
 	dev-perl/JSON
-	dev-python/subprocess32
 	dev-python/send2trash
 	media-libs/tiff
 	media-libs/libexif
