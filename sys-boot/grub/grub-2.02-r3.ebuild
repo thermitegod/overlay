@@ -1,6 +1,5 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
-# $Id: f40c9c7952988209a91e73c7c78d4f4ca2c5fb08 $
 
 EAPI="6"
 
@@ -29,7 +28,7 @@ if [[ ${PV} != 9999 ]]; then
 		SRC_URI="mirror://gnu/${PN}/${P}.tar.xz"
 		S=${WORKDIR}/${P%_*}
 	fi
-	KEYWORDS="~amd64 ~arm ~arm64 ppc ppc64 ~x86"
+	KEYWORDS="amd64 ~arm ~arm64 ppc ppc64 x86"
 else
 	inherit git-r3
 	EGIT_REPO_URI="git://git.sv.gnu.org/grub.git
@@ -135,9 +134,9 @@ RDEPEND="${COMMON_DEPEND}
 
 RESTRICT="strip !test? ( test )"
 
-QA_EXECSTACK="bin/grub*-emu* lib/grub/*"
-QA_WX_LOAD="lib/grub/*"
-QA_MULTILIB_PATHS="lib/grub/.*"
+QA_EXECSTACK="usr/bin/grub*-emu* usr/lib/grub/*"
+QA_WX_LOAD="usr/lib/grub/*"
+QA_MULTILIB_PATHS="usr/lib/grub/.*"
 
 src_unpack() {
 	if [[ ${PV} == 9999 ]]; then
@@ -209,9 +208,7 @@ grub_configure() {
 	local myeconfargs=(
 		--disable-werror
 		--program-prefix=
-		--sbindir="${EPREFIX}"/sbin
-		--bindir="${EPREFIX}"/bin
-		--libdir="${EPREFIX}"/lib
+		--libdir="${EPREFIX}"/usr/lib
 		--htmldir="${EPREFIX}"/usr/share/doc/${PF}/html
 		$(use_enable debug mm-debug)
 		$(use_enable device-mapper)
