@@ -35,10 +35,10 @@ DEPEND="${RDEPEND}
 src_configure() {
 	econf \
 		--htmldir=/usr/share/doc/${PF}/html \
+		$(use_enable desktop-integration) \
+		$(use_enable nls) \
 		$(use_enable startup-notification) \
 		$(use_enable video-thumbnails) \
-		$(use_enable nls) \
-		$(use_enable desktop-integration) \
 		--disable-pixmaps \
 		$(use_with gtk3 gtk3 "yes")
 }
@@ -68,8 +68,6 @@ pkg_postinst() {
 		elog "When using SpaceFM without udisks, and without the udisks-daemon running,"
 		elog "you may need to enable kernel polling for device media changes to be detected."
 		elog "See /usr/share/doc/${PF}/html/spacefm-manual-en.html#devices-kernpoll"
-		has_version '<virtual/udev-173' && ewarn "You need at least udev-173"
-		kernel_is lt 2 6 38 && ewarn "You need at least kernel 2.6.38"
 		einfo
 	fi
 }
