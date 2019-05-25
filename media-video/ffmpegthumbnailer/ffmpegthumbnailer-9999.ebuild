@@ -1,7 +1,7 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 inherit cmake-utils eutils
 
@@ -9,7 +9,6 @@ if [[ ${PV} != *9999* ]]; then
 	SRC_URI="https://github.com/dirkvdb/${PN}/releases/download/${PV}/${P}.tar.bz2"
 else
 	EGIT_REPO_URI="https://github.com/dirkvdb/ffmpegthumbnailer"
-	#EGIT_BRANCH="deprecation"
 	inherit git-r3
 fi
 
@@ -19,26 +18,26 @@ HOMEPAGE="https://github.com/dirkvdb/ffmpegthumbnailer"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 sparc x86 ~x86-fbsd"
-IUSE="gnome gtk jpeg png test"
+IUSE="gnome gtk jpeg libav png test"
 
 RDEPEND="
 	gtk? ( dev-libs/glib:2= )
 	jpeg? ( virtual/jpeg:0= )
+	!libav? ( >=media-video/ffmpeg-2.7:0= )
+	libav? ( >=media-video/libav-11:0= )
 	png? ( media-libs/libpng:0= )
 "
-
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
-
 REQUIRED_USE="gnome? ( gtk )
-	test? ( png jpeg )
-"
+	test? ( png jpeg )"
 
 DOCS=( AUTHORS ChangeLog README.md )
 
 src_prepare() {
 	rm -rf out* || die
+
 	cmake-utils_src_prepare
 }
 
