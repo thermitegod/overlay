@@ -4,7 +4,7 @@
 EAPI="7"
 AUTOTOOLS_AUTO_DEPEND="no"
 
-inherit autotools toolchain-funcs multilib multilib-minimal git-r3
+inherit autotools toolchain-funcs multilib multilib-minimal git-r3 usr-ldscript
 
 DESCRIPTION="Standard (de)compression library"
 HOMEPAGE="https://github.com/zlib-ng/zlib-ng"
