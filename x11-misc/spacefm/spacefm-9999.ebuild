@@ -43,6 +43,12 @@ src_configure() {
 		$(use_with gtk3 gtk3 "yes")
 }
 
+src_install() {
+	emake DESTDIR="${D}" install
+	einstalldocs
+	doman doc/*.1
+}
+
 pkg_postinst() {
 	xdg_desktop_database_update
 	xdg_mimeinfo_database_update
