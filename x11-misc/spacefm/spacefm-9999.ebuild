@@ -1,7 +1,7 @@
 # Copyright 1999-2019 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 inherit gnome2-utils linux-info xdg-utils git-r3
 
@@ -12,7 +12,7 @@ EGIT_REPO_URI="https://github.com/thermitegod/spacefm"
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
-IUSE="desktop-integration gtk2 +gtk3 +nls +startup-notification +video-thumbnails"
+IUSE="desktop-integration deprecated-hw gtk2 +gtk3 +git +nls +startup-notification +video-thumbnails"
 
 RDEPEND="dev-libs/glib:2
 	dev-util/desktop-file-utils
@@ -25,6 +25,7 @@ RDEPEND="dev-libs/glib:2
 	x11-misc/shared-mime-info
 	gtk2? ( gtk3? ( >=x11-libs/gtk+-3.24.1:3 ) !gtk3? ( x11-libs/gtk+:2 ) )
 	!gtk2? ( x11-libs/gtk+:3 )
+	git? ( dev-vcs/git )
 	startup-notification? ( x11-libs/startup-notification )
 	video-thumbnails? ( media-video/ffmpegthumbnailer )"
 DEPEND="${RDEPEND}
@@ -36,6 +37,8 @@ src_configure() {
 	econf \
 		--htmldir=/usr/share/doc/${PF}/html \
 		$(use_enable desktop-integration) \
+		$(use_enable deprecated-hw) \
+		$(use_enable git) \
 		$(use_enable nls) \
 		$(use_enable startup-notification) \
 		$(use_enable video-thumbnails) \
