@@ -139,17 +139,6 @@ src_install() {
 
 		insinto /usr/share/icons/hicolor/16x16/apps/
 		newins GUI/p7zip_16_ok.png p7zip.png
-
-		if use kde; then
-			rm GUI/kde4/p7zip_compress.desktop || die
-			insinto /usr/share/kservices5/ServiceMenus
-			doins GUI/kde4/*.desktop
-			dodir /usr/share/kde4/services/ServiceMenus # drop these lines after konqueror:4/krusader:4 are gone
-			for item in "${ED}"usr/share/kservices5/ServiceMenus/*.desktop; do
-				item="$(basename ${item})"
-				dosym "/usr/share/kservices5/ServiceMenus/${item}" "/usr/share/kde4/services/ServiceMenus/${item}"
-			done
-		fi
 	fi
 
 	dobin contrib/gzip-like_CLI_wrapper_for_7z/p7zip
