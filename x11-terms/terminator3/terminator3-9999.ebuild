@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{4,5,6,7} )
+PYTHON_COMPAT=( python3_{5,6,7} )
 
 DESCRIPTION="Multiple GNOME terminals in one window"
 HOMEPAGE="https://launchpad.net/terminator https://github.com/thermitegod/terminator3"
