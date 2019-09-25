@@ -41,4 +41,3 @@ multilib_src_install() {
 
 	use static-libs || rm -f "${ED}"/usr/$(get_libdir)/lib{z,minizip}.{a,la} #419645
 }
-

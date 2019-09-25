@@ -5,6 +5,7 @@
     <email>prometheanfire@gentoo.org</email>
   </maintainer>
   <use>
+    <flag name="clang">Support for building with clang</flag>
     <flag name="rar">Enable support for non-free rar decoder</flag>
   </use>
   <upstream>
