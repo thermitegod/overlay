@@ -136,10 +136,6 @@ RDEPEND="${COMMON_DEPEND}
 	tools? ( ${PYTHON_DEPS} )
 "
 
-PATCHES=(
-	"${FILESDIR}/${PN}-0.29.0-make-ffmpeg-version-check-non-fatal.patch"
-)
-
 src_prepare() {
 	cp "${DISTDIR}/waf-${WAF_PV}" "${S}"/waf || die
 	chmod +x "${S}"/waf || die
