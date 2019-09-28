@@ -32,7 +32,7 @@ IUSE="+alsa aqua archive bluray cdda +cli coreaudio cplugins cuda doc drm dvb
 	dvd +egl gbm +iconv jack javascript jpeg lcms +libass libcaca libmpv +lua
 	luajit openal +opengl oss pulseaudio raspberry-pi rubberband samba sdl
 	selinux test tools +uchardet v4l vaapi vdpau vulkan wayland +X +xv zlib
-	zsh-completion"
+"
 
 REQUIRED_USE="
 	|| ( cli libmpv )
@@ -54,7 +54,6 @@ REQUIRED_USE="
 	wayland? ( egl )
 	X? ( egl? ( opengl ) )
 	xv? ( X )
-	zsh-completion? ( cli )
 	${PYTHON_REQUIRED_USE}
 "
 
@@ -128,7 +127,7 @@ DEPEND="${COMMON_DEPEND}
 	dvb? ( virtual/linuxtv-dvb-headers )
 	test? ( >=dev-util/cmocka-1.0.0 )
 	v4l? ( virtual/os-headers )
-	zsh-completion? ( dev-lang/perl )
+	dev-lang/perl
 "
 RDEPEND="${COMMON_DEPEND}
 	cuda? ( x11-drivers/nvidia-drivers[X] )
@@ -153,7 +152,7 @@ src_configure() {
 
 	# Prevent access violations from zsh completion generation.
 	# See Gentoo bug 656086.
-	use zsh-completion && addpredict /dev/dri
+	addpredict /dev/dri
 
 	local mywafargs=(
 		--confdir="${EPREFIX}/etc/${PN}"
@@ -172,7 +171,6 @@ src_configure() {
 
 		$(use_enable doc pdf-build)
 		$(use_enable cplugins)
-		$(use_enable zsh-completion zsh-comp)
 		$(use_enable test)
 
 		--disable-android
