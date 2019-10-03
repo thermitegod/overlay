@@ -32,7 +32,7 @@ IUSE="+alsa aqua archive bluray cdda +cli coreaudio cplugins cuda doc drm dvb
 	dvd +egl gbm +iconv jack javascript jpeg lcms +libass libcaca libmpv +lua
 	luajit openal +opengl oss pulseaudio raspberry-pi rubberband samba sdl
 	selinux test tools +uchardet v4l vaapi vdpau vulkan wayland +X +xv zlib
-"
+	zsh-completion"
 
 REQUIRED_USE="
 	|| ( cli libmpv )
@@ -54,6 +54,7 @@ REQUIRED_USE="
 	wayland? ( egl )
 	X? ( egl? ( opengl ) )
 	xv? ( X )
+	zsh-completion? ( cli )
 	${PYTHON_REQUIRED_USE}
 "
 
@@ -66,6 +67,7 @@ COMMON_DEPEND="
 	drm? ( x11-libs/libdrm )
 	dvd? (
 		>=media-libs/libdvdnav-4.2.0
+		>=media-libs/libdvdread-4.1.0
 	)
 	egl? ( media-libs/mesa[egl,gbm(-)?,wayland(-)?] )
 	iconv? (
@@ -127,7 +129,7 @@ DEPEND="${COMMON_DEPEND}
 	dvb? ( virtual/linuxtv-dvb-headers )
 	test? ( >=dev-util/cmocka-1.0.0 )
 	v4l? ( virtual/os-headers )
-	dev-lang/perl
+	zsh-completion? ( dev-lang/perl )
 "
 RDEPEND="${COMMON_DEPEND}
 	cuda? ( x11-drivers/nvidia-drivers[X] )
@@ -152,7 +154,7 @@ src_configure() {
 
 	# Prevent access violations from zsh completion generation.
 	# See Gentoo bug 656086.
-	addpredict /dev/dri
+	use zsh-completion && addpredict /dev/dri
 
 	local mywafargs=(
 		--confdir="${EPREFIX}/etc/${PN}"
@@ -238,6 +240,7 @@ src_configure() {
 		$(use_enable cuda cuda-hwaccel)
 
 		# TV features:
+		$(use_enable v4l tv)
 		$(use_enable dvb dvbin)
 
 		# Miscellaneous features:
