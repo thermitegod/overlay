@@ -9,7 +9,7 @@ inherit linux-info python-r1 toolchain-funcs
 
 DESCRIPTION="report file access events from all running processes"
 HOMEPAGE="https://launchpad.net/fatrace"
-SRC_URI="https://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tar.bz2"
+SRC_URI="https://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -24,11 +24,6 @@ CONFIG_CHECK="~FANOTIFY"
 
 pkg_setup() {
 	use powertop && python-single-r1_pkg_setup
-}
-
-src_prepare() {
-	epatch "${FILESDIR}"/${PN}-0.11-sysmacros.patch #580082
-	tc-export CC
 }
 
 src_install() {
