@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=(python{3_6,3_7,3_8})
+PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit cmake-multilib cmake-utils python-any-r1 git-r3
 

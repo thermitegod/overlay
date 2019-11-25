@@ -12,7 +12,7 @@ else
 	KEYWORDS="amd64"
 fi
 
-PYTHON_COMPAT=( python3_{5,6,7} )
+PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit distutils-r1 xdg-utils
 
