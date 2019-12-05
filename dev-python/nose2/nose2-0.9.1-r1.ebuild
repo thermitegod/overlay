@@ -8,7 +8,7 @@ inherit distutils-r1
 
 DESCRIPTION="Next generation unittest with plugins"
 HOMEPAGE="https://github.com/nose-devs/nose2"
-SRC_URI="https://github.com/nose-devs/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
