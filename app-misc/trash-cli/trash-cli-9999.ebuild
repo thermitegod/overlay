@@ -7,11 +7,17 @@ PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit distutils-r1 vcs-snapshot
 
-GIT_REF=5abecd53e1d84f2a5fd3fc60d2f5d71e518826c5
+if [[ ${PV} == "9999" ]] ; then
+	AUTOTOOLS_AUTORECONF="1"
+	EGIT_REPO_URI="https://github.com/thermitegod/trash-cli"
+	inherit git-r3
+else
+	SRC_URI=""
+	KEYWORDS="amd64"
+fi
 
 DESCRIPTION="Python scripts to manipulate trash cans via the command line"
-HOMEPAGE="https://github.com/andreafrancia/trash-cli"
-SRC_URI="https://github.com/andreafrancia/${PN}/archive/${GIT_REF}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/thermitegod/trash-cli"
 
 LICENSE="GPL-2"
 SLOT="0"
