@@ -3,12 +3,12 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python2_7 python3_{6,7,8} )
+PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit cmake-utils linux-info python-single-r1 python-utils-r1
 
 EGIT_COMMIT="v${PV}"
-LIBBPF_VER="0.0.5"
+LIBBPF_VER="0.0.6"
 
 DESCRIPTION="Tools for BPF-based Linux IO analysis, networking, monitoring, and more"
 HOMEPAGE="https://iovisor.github.io/bcc/"
@@ -24,12 +24,14 @@ KEYWORDS="~amd64 ~arm64 ~x86"
 IUSE="+luajit test"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
-RDEPEND=">=sys-kernel/linux-headers-4.18
+RDEPEND="
+	>=sys-kernel/linux-headers-4.14
 	>=dev-libs/elfutils-0.166:=
 	sys-devel/clang:=
 	>=sys-devel/llvm-3.7.1:=[llvm_targets_BPF(+)]
 	luajit? ( dev-lang/luajit )
-	${PYTHON_DEPS}"
+	${PYTHON_DEPS}
+"
 DEPEND="${RDEPEND}
 	test? (
 		|| (
@@ -38,9 +40,12 @@ DEPEND="${RDEPEND}
 		)
 		net-analyzer/netperf
 		net-misc/iperf:*
-	)"
-BDEPEND="dev-util/cmake
-	virtual/pkgconfig"
+	)
+"
+BDEPEND="
+	dev-util/cmake
+	virtual/pkgconfig
+"
 
 S=${WORKDIR}/${PN}-${EGIT_COMMIT#v}
 
@@ -82,4 +87,5 @@ src_configure() {
 src_install() {
 	cmake-utils_src_install
 	python_fix_shebang "${ED}"
+	python_optimize
 }
