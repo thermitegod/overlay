@@ -14,7 +14,7 @@ inherit distutils-r1 virtualx git-r3
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64 ~ppc x86"
-IUSE="dbus"
+IUSE="+dbus"
 
 RDEPEND="
 	>=x11-libs/gtk+-3.16:3
