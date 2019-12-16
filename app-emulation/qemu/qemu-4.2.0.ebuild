@@ -36,9 +36,9 @@ SLOT="0"
 IUSE="accessibility +aio alsa bzip2 capstone +caps +curl debug doc
 	+fdt glusterfs gnutls gtk infiniband iscsi jemalloc +jpeg kernel_linux
 	kernel_FreeBSD lzo ncurses nfs nls numa opengl +oss +pin-upstream-blobs
-	+png pulseaudio python rbd sasl +seccomp sdl selinux smartcard snappy
+	plugins +png pulseaudio python rbd sasl +seccomp sdl selinux smartcard snappy
 	spice ssh static static-user systemtap tci test usb usbredir vde
-	+vhost-net virgl virtfs +vnc vte xattr xen xfs +xkb"
+	+vhost-net vhost-user-fs virgl virtfs +vnc vte xattr xen xfs +xkb"
 
 COMMON_TARGETS="aarch64 alpha arm cris hppa i386 m68k microblaze microblazeel
 	mips mips64 mips64el mipsel nios2 or1k ppc ppc64 riscv32 riscv64 s390x
@@ -53,6 +53,7 @@ use_softmmu_targets=$(printf ' qemu_softmmu_targets_%s' ${IUSE_SOFTMMU_TARGETS})
 use_user_targets=$(printf ' qemu_user_targets_%s' ${IUSE_USER_TARGETS})
 IUSE+=" ${use_softmmu_targets} ${use_user_targets}"
 
+RESTRICT="!test? ( test )"
 # Allow no targets to be built so that people can get a tools-only build.
 # Block USE flag configurations known to not work.
 REQUIRED_USE="${PYTHON_REQUIRED_USE}
@@ -63,9 +64,12 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}
 	qemu_softmmu_targets_ppc? ( fdt )
 	qemu_softmmu_targets_riscv32? ( fdt )
 	qemu_softmmu_targets_riscv64? ( fdt )
-	static? ( static-user !alsa !gtk !opengl !pulseaudio !snappy )
+	static? ( static-user !alsa !gtk !opengl !pulseaudio !snappy !plugins )
+	static-user? ( !plugins )
 	virtfs? ( xattr )
-	vte? ( gtk )"
+	vte? ( gtk )
+	plugins? ( !static !static-user )
+"
 
 # Dependencies required for qemu tools (qemu-nbd, qemu-img, qemu-io, ...)
 # and user/softmmu targets (qemu-*, qemu-system-*).
@@ -213,7 +217,6 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.11.1-capstone_include_path.patch
 	"${FILESDIR}"/${PN}-4.0.0-sanitize-interp_info.patch
 	"${FILESDIR}"/${PN}-4.0.0-mkdir_systemtap.patch #684902
-	"${FILESDIR}"/${PN}-4.0.0-xkbcommon.patch
 )
 
 QA_PREBUILT="
@@ -418,6 +421,7 @@ qemu_src_configure() {
 		$(use_enable debug debug-info)
 		$(use_enable debug debug-tcg)
 		$(use_enable doc docs)
+		$(use_enable plugins)
 		$(use_enable tci tcg-interpreter)
 		$(use_enable xattr attr)
 	)
@@ -467,6 +471,7 @@ qemu_src_configure() {
 		$(conf_notuser usbredir usb-redir)
 		$(conf_notuser vde)
 		$(conf_notuser vhost-net)
+		$(conf_notuser vhost-user-fs)
 		$(conf_notuser virgl virglrenderer)
 		$(conf_notuser virtfs)
 		$(conf_notuser vnc)
