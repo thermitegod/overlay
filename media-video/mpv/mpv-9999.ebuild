@@ -11,11 +11,11 @@ WAF_PV=2.0.9
 inherit eapi7-ver flag-o-matic gnome2-utils pax-utils python-r1 toolchain-funcs waf-utils xdg-utils
 
 DESCRIPTION="Media player based on MPlayer and mplayer2"
-HOMEPAGE="https://mpv.io/"
+HOMEPAGE="https://mpv.io/ https://github.com/mpv-player/mpv"
 
 if [[ ${PV} != *9999* ]]; then
 	SRC_URI="https://github.com/mpv-player/mpv/archive/v${PV}.tar.gz -> ${P}.tar.gz"
-	KEYWORDS="~amd64 ~arm ~hppa ~ppc ~ppc64 ~x86 ~amd64-linux"
+	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ppc ~ppc64 ~x86 ~amd64-linux"
 	DOCS=( RELEASE_NOTES )
 else
 	EGIT_REPO_URI="https://github.com/mpv-player/mpv.git"
@@ -28,17 +28,17 @@ DOCS+=( README.md DOCS/{client-api,interface}-changes.rst )
 # See Copyright in sources and Gentoo bug 506946. Waf is BSD, libmpv is ISC.
 LICENSE="LGPL-2.1+ GPL-2+ BSD ISC samba? ( GPL-3+ )"
 SLOT="0"
-IUSE="+alsa aqua archive bluray cdda +cli coreaudio cplugins cuda doc drm dvb
-	dvd +egl gbm +iconv jack javascript jpeg lcms +libass libcaca libmpv +lua
+IUSE="+alsa aqua archive bluray cdda +cli coreaudio cplugins cuda debug doc drm dvb
+	dvd +egl gamepad gbm +iconv jack javascript jpeg lcms +libass libcaca libmpv +lua
 	luajit openal +opengl oss pulseaudio raspberry-pi rubberband samba sdl
-	selinux test tools +uchardet v4l vaapi vdpau vulkan wayland +X +xv zlib
-	zsh-completion"
+	selinux test tools +uchardet vaapi vdpau vulkan wayland +X +xv zlib zimg"
 
 REQUIRED_USE="
 	|| ( cli libmpv )
 	aqua? ( opengl )
 	cuda? ( opengl )
 	egl? ( || ( gbm X wayland ) )
+	gamepad? ( sdl )
 	gbm? ( drm egl opengl )
 	lcms? ( opengl )
 	luajit? ( lua )
@@ -47,16 +47,16 @@ REQUIRED_USE="
 	test? ( opengl )
 	tools? ( cli )
 	uchardet? ( iconv )
-	v4l? ( || ( alsa oss ) )
 	vaapi? ( || ( gbm X wayland ) )
 	vdpau? ( X )
 	vulkan? ( || ( X wayland ) )
 	wayland? ( egl )
 	X? ( egl? ( opengl ) )
 	xv? ( X )
-	zsh-completion? ( cli )
 	${PYTHON_REQUIRED_USE}
 "
+
+RESTRICT="!test? ( test )"
 
 COMMON_DEPEND="
 	>=media-video/ffmpeg-4.0:0=[encode,threads,vaapi?,vdpau?]
@@ -66,10 +66,11 @@ COMMON_DEPEND="
 	cdda? ( dev-libs/libcdio-paranoia )
 	drm? ( x11-libs/libdrm )
 	dvd? (
-		>=media-libs/libdvdnav-4.2.0
-		>=media-libs/libdvdread-4.1.0
+		>=media-libs/libdvdnav-4.2.0:=
+		>=media-libs/libdvdread-4.1.0:=
 	)
 	egl? ( media-libs/mesa[egl,gbm(-)?,wayland(-)?] )
+	gamepad? ( media-libs/libsdl2 )
 	iconv? (
 		virtual/libiconv
 		uchardet? ( app-i18n/uchardet )
@@ -93,13 +94,11 @@ COMMON_DEPEND="
 	rubberband? ( >=media-libs/rubberband-1.8.0 )
 	samba? ( net-fs/samba )
 	sdl? ( media-libs/libsdl2[sound,threads,video] )
-	v4l? ( media-libs/libv4l )
 	vaapi? ( x11-libs/libva:=[drm?,X?,wayland?] )
 	vdpau? ( x11-libs/libvdpau )
 	vulkan? (
+		media-libs/libplacebo[vulkan]
 		media-libs/shaderc
-		media-libs/vulkan-loader[X?,wayland?]
-		>=media-libs/libplacebo-1.18.0[vulkan]
 	)
 	wayland? (
 		>=dev-libs/wayland-1.6.0
@@ -119,17 +118,16 @@ COMMON_DEPEND="
 		xv? ( x11-libs/libXv )
 	)
 	zlib? ( sys-libs/zlib )
+	zimg? ( >=media-libs/zimg-2.9.2 )
 "
 DEPEND="${COMMON_DEPEND}
 	${PYTHON_DEPS}
-	dev-python/docutils
 	virtual/pkgconfig
 	cuda? ( >=media-libs/nv-codec-headers-8.1.24.1 )
-	doc? ( dev-python/rst2pdf )
+	doc? (  dev-python/docutils
+			dev-python/rst2pdf )
 	dvb? ( virtual/linuxtv-dvb-headers )
 	test? ( >=dev-util/cmocka-1.0.0 )
-	v4l? ( virtual/os-headers )
-	zsh-completion? ( dev-lang/perl )
 "
 RDEPEND="${COMMON_DEPEND}
 	cuda? ( x11-drivers/nvidia-drivers[X] )
@@ -140,7 +138,7 @@ RDEPEND="${COMMON_DEPEND}
 src_prepare() {
 	cp "${DISTDIR}/waf-${WAF_PV}" "${S}"/waf || die
 	chmod +x "${S}"/waf || die
-	default_src_prepare
+	default
 }
 
 src_configure() {
@@ -151,10 +149,6 @@ src_configure() {
 		append-cflags -I"${SYSROOT%/}${EPREFIX}/opt/vc/include"
 		append-ldflags -L"${SYSROOT%/}${EPREFIX}/opt/vc/lib"
 	fi
-
-	# Prevent access violations from zsh completion generation.
-	# See Gentoo bug 656086.
-	use zsh-completion && addpredict /dev/dri
 
 	local mywafargs=(
 		--confdir="${EPREFIX}/etc/${PN}"
@@ -168,14 +162,14 @@ src_configure() {
 		--disable-static-build
 		# See deep down below for build-date.
 		--disable-optimize # Don't add '-O2' to CFLAGS.
-		--disable-debug-build # Don't add '-g' to CFLAGS.
-		--enable-html-build
+		$(use_enable debug debug-build)
 
+		$(use_enable doc html-build)
 		$(use_enable doc pdf-build)
+		$(use_enable doc manpage-build)
 		$(use_enable cplugins)
 		$(use_enable test)
 
-		--disable-android
 		$(use_enable iconv)
 		$(use_enable samba libsmbclient)
 		$(use_enable lua)
@@ -234,25 +228,38 @@ src_configure() {
 		$(usex libmpv "$(use_enable opengl plain-gl)" '--disable-plain-gl')
 		$(usex opengl '' '--disable-gl')
 		$(use_enable vulkan)
+		$(use_enable gamepad sdl2-gamepad)
 
 		# HWaccels:
 		# Automagic Video Toolbox HW acceleration. See Gentoo bug 577332.
 		$(use_enable cuda cuda-hwaccel)
 
 		# TV features:
-		$(use_enable v4l tv)
 		$(use_enable dvb dvbin)
 
 		# Miscellaneous features:
-		--disable-apple-remote # Needs testing first. See Gentoo bug 577332.
+		$(use_enable zimg)
 	)
 
 	if use vaapi && use X; then
 		mywafargs+=(
-			$(use_enable opengl vaapi-glx)
 			$(use_enable egl vaapi-x-egl)
 		)
 	fi
+
+	# Not for us
+	mywafargs+=(
+		--disable-android
+		--disable-egl-android
+		--disable-uwp
+		--disable-audiounit
+		--disable-wasapi
+		--disable-ios-gl
+		--disable-macos-touchbar
+		--disable-macos-cocoa-cb
+		--disable-tvos
+		--disable-egl-angle-win32
+	)
 
 	# Create reproducible non-live builds.
 	[[ ${PV} != *9999* ]] && mywafargs+=(--disable-build-date)
