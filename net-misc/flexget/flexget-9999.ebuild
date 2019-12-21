@@ -67,6 +67,7 @@ DEPEND="
 	dev-python/colorclass[${PYTHON_USEDEP}]
 	dev-python/APScheduler[${PYTHON_USEDEP}]
 	dev-python/jaraco-collections[${PYTHON_USEDEP}]
+	dev-python/loguru[${PYTHON_USEDEP}]
 "
 DEPEND+=" test? ( dev-python/nose[${PYTHON_USEDEP}] )"
 
