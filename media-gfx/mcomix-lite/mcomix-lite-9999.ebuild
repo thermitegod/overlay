@@ -27,6 +27,7 @@ IUSE=""
 RDEPEND="${DEPEND}
 	virtual/jpeg
 	dev-python/pillow[${PYTHON_USEDEP}]
+	dev-python/loguru[${PYTHON_USEDEP}]
 	x11-libs/gdk-pixbuf
 	!media-gfx/comix
 	!media-gfx/mcomix"
