@@ -44,14 +44,6 @@ PATCHES=(
 RESTRICT="test"
 S="${WORKDIR}/node-v${PV}"
 
-pkg_pretend() {
-	(use x86 && ! use cpu_flags_x86_sse2) && \
-		die "Your CPU doesn't support the required SSE2 instruction."
-
-	( [[ ${MERGE_TYPE} != "binary" ]] && ! test-flag-CXX -std=c++11 ) && \
-		die "Your compiler doesn't support C++11. Use GCC 4.8, Clang 3.3 or newer."
-}
-
 src_prepare() {
 	tc-export CC CXX PKG_CONFIG
 	export V=1
