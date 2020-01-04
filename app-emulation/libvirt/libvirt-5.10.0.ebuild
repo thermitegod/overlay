@@ -5,7 +5,7 @@ EAPI=7
 
 PYTHON_COMPAT=( python3_{6,7,8} )
 
-inherit autotools bash-completion-r1 eutils linux-info python-any-r1 readme.gentoo-r1 systemd
+inherit autotools out-of-source bash-completion-r1 eutils linux-info python-any-r1 readme.gentoo-r1 systemd
 
 if [[ ${PV} = *9999* ]]; then
 	inherit git-r3
@@ -15,7 +15,7 @@ if [[ ${PV} = *9999* ]]; then
 	SLOT="0"
 else
 	SRC_URI="https://libvirt.org/sources/${P}.tar.xz"
-	KEYWORDS="~amd64 ~arm64 ~x86"
+	KEYWORDS="~amd64 ~arm64 ~ppc64 ~x86"
 	SLOT="0/${PV}"
 fi
 
@@ -25,7 +25,7 @@ LICENSE="LGPL-2.1"
 IUSE="
 	apparmor audit +caps +dbus dtrace firewalld fuse glusterfs iscsi
 	iscsi-direct +libvirtd lvm libssh lxc +macvtap nfs nls numa openvz
-	parted pcap phyp pm-utils policykit +qemu rbd sasl selinux +udev +vepa
+	parted pcap phyp policykit +qemu rbd sasl selinux +udev +vepa
 	virtualbox virt-network wireshark-plugins xen zfs
 "
 
@@ -50,6 +50,7 @@ RDEPEND="
 	acct-user/qemu
 	policykit? ( acct-group/libvirt )
 	app-misc/scrub
+	>=dev-libs/glib-2.48.0
 	dev-libs/libgcrypt:0
 	dev-libs/libnl:3
 	>=dev-libs/libxml2-2.7.6
@@ -87,7 +88,6 @@ RDEPEND="
 		sys-fs/lvm2[-device-mapper-only(-)]
 	)
 	pcap? ( >=net-libs/libpcap-1.0.0 )
-	pm-utils? ( sys-power/pm-utils )
 	policykit? ( >=sys-auth/polkit-0.9 )
 	qemu? (
 		>=app-emulation/qemu-1.5.0
@@ -239,7 +239,7 @@ src_prepare() {
 	eautoreconf
 }
 
-src_configure() {
+my_src_configure() {
 	local myeconfargs=(
 		$(use_with apparmor)
 		$(use_with apparmor apparmor-profiles)
@@ -266,7 +266,6 @@ src_configure() {
 		$(use_with parted storage-disk)
 		$(use_with pcap libpcap)
 		$(use_with phyp)
-		$(use_with pm-utils )
 		$(use_with policykit polkit)
 		$(use_with qemu)
 		$(use_with qemu yajl)
@@ -295,8 +294,8 @@ src_configure() {
 		--disable-static
 		--disable-werror
 
-		--localstatedir="$EPREFIX/var"
-		--with-runstatedir="$EPREFIX/run"
+		--localstatedir=/var
+		--enable-dependency-tracking
 	)
 
 	if use virtualbox && has_version app-emulation/virtualbox-ose; then
@@ -310,13 +309,11 @@ src_configure() {
 	if [[ ${PV} = *9999* ]]; then
 		# Restore gnulib's config.sub and config.guess
 		# bug #377279
-		(cd .gnulib && git reset --hard > /dev/null)
+		(cd ${S}/.gnulib && git reset --hard > /dev/null)
 	fi
 }
 
-src_test() {
-	cd "${BUILD_DIR}"
-
+my_src_test() {
 	# remove problematic tests, bug #591416, bug #591418
 	sed -i -e 's#commandtest$(EXEEXT) # #' \
 		-e 's#virfirewalltest$(EXEEXT) # #' \
@@ -325,10 +322,10 @@ src_test() {
 		tests/Makefile
 
 	export VIR_TEST_DEBUG=1
-	HOME="${T}" emake check || die "tests failed"
+	HOME="${T}" emake check
 }
 
-src_install() {
+my_src_install() {
 	emake DESTDIR="${D}" \
 		SYSTEMD_UNIT_DIR="$(systemd_get_systemunitdir)" install
 
@@ -338,7 +335,6 @@ src_install() {
 	# libvirtd is able to create them on demand
 	rm -rf "${D}"/etc/sysconfig
 	rm -rf "${D}"/var
-	rm -rf "${D}"/run
 
 	newbashcomp "${S}/tools/bash-completion/vsh" virsh
 	bashcomp_alias virsh virt-admin
@@ -346,13 +342,18 @@ src_install() {
 	use libvirtd || return 0
 	# From here, only libvirtd-related instructions, be warned!
 
-	newinitd "${S}/libvirtd.init" libvirtd || die
-	newinitd "${FILESDIR}/libvirt-guests.init-r4" libvirt-guests || die
-	newinitd "${FILESDIR}/virtlockd.init-r1" virtlockd || die
-	newinitd "${FILESDIR}/virtlogd.init-r1" virtlogd || die
+	systemd_install_serviced \
+		"${FILESDIR}"/libvirtd.service.conf libvirtd.service
 
-	newconfd "${FILESDIR}/libvirtd.confd-r5" libvirtd || die
-	newconfd "${FILESDIR}/libvirt-guests.confd" libvirt-guests || die
+	systemd_newtmpfilesd "${FILESDIR}"/libvirtd.tmpfiles.conf libvirtd.conf
+
+	newinitd "${S}/libvirtd.init" libvirtd
+	newinitd "${FILESDIR}/libvirt-guests.init-r4" libvirt-guests
+	newinitd "${FILESDIR}/virtlockd.init-r1" virtlockd
+	newinitd "${FILESDIR}/virtlogd.init-r1" virtlogd
+
+	newconfd "${FILESDIR}/libvirtd.confd-r5" libvirtd
+	newconfd "${FILESDIR}/libvirt-guests.confd" libvirt-guests
 
 	DOC_CONTENTS=$(<"${FILESDIR}/README.gentoo-r2")
 	DISABLE_AUTOFORMATTING=true
