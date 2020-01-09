@@ -77,3 +77,8 @@ fi
 
 PATCHES=( "${FILESDIR}"/no-ver-checks.patch )
 
+src_prepare(){
+	default
+	rm flexget/components/sites/sites/hebits.py
+}
+
