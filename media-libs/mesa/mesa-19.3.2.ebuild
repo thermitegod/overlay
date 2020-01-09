@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -108,6 +108,7 @@ RDEPEND="
 		vdpau? ( >=x11-libs/libvdpau-1.1:=[${MULTILIB_USEDEP}] )
 		xvmc? ( >=x11-libs/libXvMC-1.0.8:=[${MULTILIB_USEDEP}] )
 	)
+	selinux? ( sys-libs/libselinux[${MULTILIB_USEDEP}] )
 	wayland? (
 		>=dev-libs/wayland-1.15.0:=[${MULTILIB_USEDEP}]
 		>=dev-libs/wayland-protocols-1.8
