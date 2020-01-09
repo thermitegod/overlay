@@ -342,11 +342,6 @@ my_src_install() {
 	use libvirtd || return 0
 	# From here, only libvirtd-related instructions, be warned!
 
-	systemd_install_serviced \
-		"${FILESDIR}"/libvirtd.service.conf libvirtd.service
-
-	systemd_newtmpfilesd "${FILESDIR}"/libvirtd.tmpfiles.conf libvirtd.conf
-
 	newinitd "${S}/libvirtd.init" libvirtd
 	newinitd "${FILESDIR}/libvirt-guests.init-r4" libvirt-guests
 	newinitd "${FILESDIR}/virtlockd.init-r1" virtlockd
