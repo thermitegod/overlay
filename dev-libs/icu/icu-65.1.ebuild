@@ -30,7 +30,6 @@ MULTILIB_CHOST_TOOLS=(
 
 PATCHES=(
 	"${FILESDIR}/${PN}-65.1-remove-bashisms.patch"
-	"${FILESDIR}/${PN}-64.2-darwin.patch"
 	"${FILESDIR}/${PN}-64.1-data_archive_generation.patch"
 )
 
