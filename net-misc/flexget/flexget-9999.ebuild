@@ -25,49 +25,37 @@ SLOT="0"
 IUSE="test"
 
 DEPEND="
-	dev-python/setuptools[${PYTHON_USEDEP}]
-	dev-python/idna[${PYTHON_USEDEP}]
-	dev-python/cherrypy[${PYTHON_USEDEP}]
-	dev-python/jsonschema[${PYTHON_USEDEP}]
-	dev-python/PyRSS2Gen[${PYTHON_USEDEP}]
-	dev-python/beautifulsoup:4[${PYTHON_USEDEP}]
-	dev-python/flask[${PYTHON_USEDEP}]
-	dev-python/zxcvbn[${PYTHON_USEDEP}]
-	dev-python/pyyaml[${PYTHON_USEDEP}]
-	dev-python/zc-lockfile[${PYTHON_USEDEP}]
-	dev-python/flask-restful[${PYTHON_USEDEP}]
-	dev-python/flask-compress[${PYTHON_USEDEP}]
-	dev-python/flask-restplus[${PYTHON_USEDEP}]
-	dev-python/webencodings[${PYTHON_USEDEP}]
-	dev-python/portend[${PYTHON_USEDEP}]
-	dev-python/flask-cors[${PYTHON_USEDEP}]
-	dev-python/sqlalchemy[${PYTHON_USEDEP}]
-	dev-python/babelfish[${PYTHON_USEDEP}]
-	dev-python/werkzeug[${PYTHON_USEDEP}]
-	dev-python/chardet[${PYTHON_USEDEP}]
-	dev-python/requests[${PYTHON_USEDEP}]
-	dev-python/flask-login[${PYTHON_USEDEP}]
-	dev-python/tzlocal[${PYTHON_USEDEP}]
-	dev-python/aniso8601[${PYTHON_USEDEP}]
-	dev-python/rpyc[${PYTHON_USEDEP}]
-	dev-python/plumbum[${PYTHON_USEDEP}]
-	dev-python/more-itertools[${PYTHON_USEDEP}]
-	dev-python/click[${PYTHON_USEDEP}]
-	dev-python/urllib3[${PYTHON_USEDEP}]
-	dev-python/six[${PYTHON_USEDEP}]
-	dev-python/python-dateutil[${PYTHON_USEDEP}]
-	dev-python/pynzb[${PYTHON_USEDEP}]
-	dev-python/tempora[${PYTHON_USEDEP}]
-	dev-python/certifi[${PYTHON_USEDEP}]
-	dev-python/guessit[${PYTHON_USEDEP}]
-	dev-python/terminaltables[${PYTHON_USEDEP}]
-	dev-python/feedparser[${PYTHON_USEDEP}]
-	dev-python/progressbar2[${PYTHON_USEDEP}]
-	dev-python/html5lib[${PYTHON_USEDEP}]
-	dev-python/colorclass[${PYTHON_USEDEP}]
 	dev-python/APScheduler[${PYTHON_USEDEP}]
+	dev-python/babelfish[${PYTHON_USEDEP}]
+	dev-python/beautifulsoup:4[${PYTHON_USEDEP}]
+	dev-python/certifi[${PYTHON_USEDEP}]
+	dev-python/cherrypy[${PYTHON_USEDEP}]
+	dev-python/click[${PYTHON_USEDEP}]
+	dev-python/colorclass[${PYTHON_USEDEP}]
+	dev-python/feedparser[${PYTHON_USEDEP}]
+	dev-python/flask[${PYTHON_USEDEP}]
+	dev-python/flask-compress[${PYTHON_USEDEP}]
+	dev-python/flask-cors[${PYTHON_USEDEP}]
+	dev-python/flask-login[${PYTHON_USEDEP}]
+	dev-python/flask-restplus[${PYTHON_USEDEP}]
+	dev-python/guessit[${PYTHON_USEDEP}]
+	dev-python/html5lib[${PYTHON_USEDEP}]
 	dev-python/jaraco-collections[${PYTHON_USEDEP}]
+	dev-python/jsonschema[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
+	dev-python/progressbar2[${PYTHON_USEDEP}]
+	dev-python/pynzb[${PYTHON_USEDEP}]
+	dev-python/PyRSS2Gen[${PYTHON_USEDEP}]
+	dev-python/python-dateutil[${PYTHON_USEDEP}]
+	dev-python/requests[${PYTHON_USEDEP}]
+	dev-python/rpyc[${PYTHON_USEDEP}]
+	dev-python/setuptools[${PYTHON_USEDEP}]
+	dev-python/sqlalchemy[${PYTHON_USEDEP}]
+	dev-python/terminaltables[${PYTHON_USEDEP}]
+	dev-python/tzlocal[${PYTHON_USEDEP}]
+	dev-python/urllib3[${PYTHON_USEDEP}]
+	dev-python/werkzeug[${PYTHON_USEDEP}]
+	dev-python/zxcvbn[${PYTHON_USEDEP}]
 "
 DEPEND+=" test? ( dev-python/nose[${PYTHON_USEDEP}] )"
 
@@ -75,10 +63,10 @@ if [[ ${PV} != 9999 ]]; then
 	S="${WORKDIR}/${MY_P}"
 fi
 
-PATCHES=( "${FILESDIR}"/no-ver-checks.patch )
-
 src_prepare(){
 	default
+	echo "" >| requirements.in
+	echo "" >| requirements.txt
 	rm flexget/components/sites/sites/hebits.py
 }
 
