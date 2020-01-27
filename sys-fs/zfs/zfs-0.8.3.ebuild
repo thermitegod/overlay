@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -45,19 +45,13 @@ BDEPEND="virtual/awk
 "
 
 RDEPEND="${DEPEND}
-	!=sys-apps/grep-2.13*
 	!kernel-builtin? ( ~sys-fs/zfs-kmod-${PV} )
-	!sys-fs/zfs-fuse
 	!prefix? ( virtual/udev )
 	sys-fs/udev-init-scripts
 	rootfs? (
 		app-arch/cpio
 		app-misc/pax-utils
-		!<sys-boot/grub-2.00-r2:2
 		!<sys-kernel/genkernel-3.5.1.1
-		!<sys-kernel/genkernel-next-67
-		!<sys-kernel/bliss-initramfs-7.1.0
-		!<sys-kernel/dracut-044-r1
 	)
 	test-suite? (
 		sys-apps/util-linux
@@ -74,10 +68,7 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 RESTRICT="test"
 
-PATCHES=(
-	"${FILESDIR}/bash-completion-sudo.patch"
-	"${FILESDIR}/0.8.2-ZPOOL_IMPORT_UDEV_TIMEOUT_MS.patch" # https://github.com/zfsonlinux/zfs/pull/9109
-)
+PATCHES=( "${FILESDIR}/bash-completion-sudo.patch" )
 
 pkg_setup() {
 	if use kernel_linux && use test-suite; then
@@ -124,6 +115,7 @@ src_prepare() {
 
 src_configure() {
 	use custom-cflags || strip-flags
+	python_setup
 
 	local myconf=(
 		--bindir="${EPREFIX}/bin"
@@ -137,6 +129,7 @@ src_configure() {
 		--with-linux="${KV_DIR}"
 		--with-linux-obj="${KV_OUT_DIR}"
 		--with-udevdir="$(get_udevdir)"
+		--with-python="${EPYTHON}"
 		--with-systemdunitdir="$(systemd_get_systemunitdir)"
 		--with-systemdpresetdir="${EPREFIX}/lib/systemd/system-preset"
 		$(use_enable debug)
@@ -145,6 +138,9 @@ src_configure() {
 	)
 
 	econf "${myconf[@]}"
+
+	# temp hack for https://github.com/zfsonlinux/zfs/issues/9443
+	sed -i "s@/usr/local/@"${EPREFIX}/"@g" etc/init.d/zfs-functions || die
 }
 
 src_compile() {
@@ -180,8 +176,8 @@ src_install() {
 	fi
 
 	# enforce best available python implementation
-	python_setup
 	python_fix_shebang "${ED}/bin"
+
 }
 
 pkg_postinst() {
