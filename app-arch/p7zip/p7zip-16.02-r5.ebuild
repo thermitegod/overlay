@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -13,8 +13,8 @@ SRC_URI="mirror://sourceforge/${PN}/${PN}_${PV}_src_all.tar.bz2"
 
 LICENSE="LGPL-2.1 rar? ( unRAR )"
 SLOT="0"
-KEYWORDS="alpha amd64 ~arm ~arm64 hppa ia64 ppc ppc64 ~s390 sparc x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris"
-IUSE="abi_x86_x32 doc clang kde +pch rar static wxwidgets"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~ppc ~ppc64 ~s390 ~sparc ~x86 ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris"
+IUSE="abi_x86_x32 clang doc kde +pch rar static wxwidgets"
 
 REQUIRED_USE="kde? ( wxwidgets )"
 
@@ -22,9 +22,8 @@ RDEPEND="wxwidgets? ( x11-libs/wxGTK:${WX_GTK_VER}[X] )"
 DEPEND="${RDEPEND}
 	abi_x86_x32? ( >=dev-lang/yasm-1.2.0-r1 )
 	amd64? ( dev-lang/yasm )
-	x86? ( dev-lang/nasm )
 	clang? ( sys-devel/clang )
-"
+	x86? ( dev-lang/nasm )"
 
 S=${WORKDIR}/${PN}_${PV}
 
@@ -36,6 +35,7 @@ PATCHES=(
 	"${FILESDIR}"/CVE-2017-17969.patch
 	"${FILESDIR}"/CVE-2018-5996.patch
 	"${FILESDIR}"/CVE-2018-10115.patch
+	"${FILESDIR}"/WimHandler.cpp.patch
 )
 
 src_prepare() {
@@ -46,11 +46,12 @@ src_prepare() {
 	fi
 
 	sed \
-		-e 's:-m32 ::g' \
-		-e 's:-m64 ::g' \
-		-e 's:-pipe::g' \
-		-e '/ALLFLAGS/s:-s ::' \
-		-e "/OPTFLAGS=/s:=.*:=${CXXFLAGS}:" \
+		-e 's|-m32 ||g' \
+		-e 's|-m64 ||g' \
+		-e 's|-pipe||g' \
+		-e "/[ALL|OPT]FLAGS/s|-s||;/OPTIMIZE/s|-s||" \
+		-e "/CFLAGS=/s|=|+=|" \
+		-e "/CXXFLAGS=/s|=|+=|" \
 		-i makefile* || die
 
 	# remove non-free RAR codec
@@ -99,16 +100,16 @@ src_prepare() {
 	if use kde || use wxwidgets; then
 		need-wxwidgets unicode
 		einfo "Preparing dependency list"
-		emake depend
+		emake CC=$(tc-getCC) CXX=$(tc-getCXX) depend
 	fi
 }
 
 src_compile() {
 	emake all3
-	#emake CC=$(tc-getCC) CXX=$(tc-getCXX) all3
+	#emake CC=$(tc-getCC) CXX=$(tc-getCXX) all3 #breaks clang build???
 	if use kde || use wxwidgets; then
 		emake CC=$(tc-getCC) CXX=$(tc-getCXX) -- 7zG
-#		emake -- 7zFM
+#		emake CC=$(tc-getCC) CXX=$(tc-getCXX) -- 7zFM
 	fi
 }
 
@@ -139,6 +140,17 @@ src_install() {
 
 		insinto /usr/share/icons/hicolor/16x16/apps/
 		newins GUI/p7zip_16_ok.png p7zip.png
+
+		if use kde; then
+			rm GUI/kde4/p7zip_compress.desktop || die
+			insinto /usr/share/kservices5/ServiceMenus
+			doins GUI/kde4/*.desktop
+			dodir /usr/share/kde4/services/ServiceMenus # drop these lines after konqueror:4/krusader:4 are gone
+			for item in "${ED}"/usr/share/kservices5/ServiceMenus/*.desktop; do
+				item="$(basename ${item})"
+				dosym ${EROOT}"/usr/share/kservices5/ServiceMenus/${item}" "/usr/share/kde4/services/ServiceMenus/${item}"
+			done
+		fi
 	fi
 
 	dobin contrib/gzip-like_CLI_wrapper_for_7z/p7zip
@@ -156,6 +168,7 @@ src_install() {
 
 	if use doc; then
 		dodoc DOC/*.txt
-		dohtml -r DOC/MANUAL/*
+		docinto html
+		dodoc -r DOC/MANUAL/*
 	fi
 }
