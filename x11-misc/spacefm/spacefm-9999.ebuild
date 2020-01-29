@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit gnome2-utils linux-info xdg-utils git-r3
+inherit linux-info xdg-utils git-r3
 
 DESCRIPTION="A multi-panel tabbed file manager"
 HOMEPAGE="https://github.com/thermitegod/spacefm"
@@ -12,7 +12,7 @@ EGIT_REPO_URI="https://github.com/thermitegod/spacefm"
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
-IUSE="desktop-integration deprecated-hw gtk2 +gtk3 +git +nls +startup-notification +video-thumbnails"
+IUSE="deprecated-hw gtk2 +gtk3 +git +nls +startup-notification +video-thumbnails"
 
 RDEPEND="dev-libs/glib:2
 	dev-util/desktop-file-utils
@@ -36,7 +36,6 @@ DEPEND="${RDEPEND}
 src_configure() {
 	econf \
 		--htmldir=/usr/share/doc/${PF}/html \
-		$(use_enable desktop-integration) \
 		$(use_enable deprecated-hw) \
 		$(use_enable git) \
 		$(use_enable nls) \
@@ -55,7 +54,7 @@ src_install() {
 pkg_postinst() {
 	xdg_desktop_database_update
 	xdg_mimeinfo_database_update
-	gnome2_icon_cache_update
+	xdg_icon_cache_update
 
 	einfo
 	elog "To mount as non-root user you need one of the following:"
@@ -84,5 +83,5 @@ pkg_postinst() {
 pkg_postrm() {
 	xdg_desktop_database_update
 	xdg_mimeinfo_database_update
-	gnome2_icon_cache_update
+	xdg_icon_cache_update
 }
