@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -277,9 +277,7 @@ multilib_src_install() {
 	keepdir /var/cache/samba
 	keepdir /var/lib/ctdb
 	keepdir /var/lib/samba/{bind-dns,private}
-	keepdir /var/lock/samba
 	keepdir /var/log/samba
-	keepdir /var/run/{ctdb,samba}
 }
 
 multilib_src_install_all() {
