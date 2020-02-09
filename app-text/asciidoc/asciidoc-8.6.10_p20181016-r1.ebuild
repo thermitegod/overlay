@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -11,11 +11,12 @@ DESCRIPTION="A plain text human readable/writable document format"
 HOMEPAGE="http://asciidoc.org/ https://github.com/asciidoc/asciidoc-py3/"
 MY_COMMIT="618f6e6f6b558ed1e5f2588cd60a5a6b4f881ca0"
 SRC_URI="https://github.com/${PN}/${PN}-py3/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
-KEYWORDS="alpha amd64 arm arm64 hppa ia64 m68k ~mips ppc ppc64 ~riscv s390 sh sparc x86 ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha amd64 arm arm64 hppa ia64 m68k ~mips ppc ppc64 ~riscv s390 sh sparc x86 ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 
 LICENSE="GPL-2"
 SLOT="0"
 IUSE="examples graphviz highlight test"
+RESTRICT="!test? ( test )"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 RDEPEND="
@@ -28,7 +29,9 @@ RDEPEND="
 	highlight? (
 		|| (
 			dev-util/source-highlight
-			dev-python/pygments[${PYTHON_USEDEP}]
+			$(python_gen_cond_dep '
+				dev-python/pygments[${PYTHON_MULTI_USEDEP}]
+			')
 			app-text/highlight
 		)
 	)"
