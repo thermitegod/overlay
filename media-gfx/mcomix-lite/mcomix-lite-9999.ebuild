@@ -22,13 +22,17 @@ HOMEPAGE="https://github.com/thermitegod/mcomix-lite"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE=""
+IUSE="+7z lha +pdf +rar"
 
 RDEPEND="${DEPEND}
 	virtual/jpeg
 	dev-python/pillow[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
 	x11-libs/gdk-pixbuf
+	7z? ( app-arch/p7zip )
+	lha? ( app-arch/lha )
+	pdf? ( app-text/mupdf )
+	rar? ( app-arch/unrar )
 	!media-gfx/comix
 	!media-gfx/mcomix"
 
@@ -39,16 +43,6 @@ src_prepare() {
 pkg_postinst() {
 	xdg_mimeinfo_database_update
 	xdg_desktop_database_update
-	echo
-	elog "Additional packages are required to open the most common comic archives:"
-	elog
-	elog "    cbr: app-arch/unrar"
-	elog "    cbz: app-arch/unzip"
-	elog
-	elog "You can also add support for 7z or LHA archives by installing"
-	elog "app-arch/p7zip or app-arch/lha. Install app-text/mupdf for"
-	elog "pdf support."
-	echo
 }
 
 pkg_postrm() {
