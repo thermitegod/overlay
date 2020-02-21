@@ -1,10 +1,10 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 PYTHON_COMPAT=( python3_{6,7,8} )
 PYTHON_REQ_USE="threads(+)"
-inherit bash-completion-r1 flag-o-matic pax-utils python-any-r1 toolchain-funcs xdg-utils
+inherit bash-completion-r1 eutils flag-o-matic pax-utils python-any-r1 toolchain-funcs xdg-utils
 
 DESCRIPTION="A JavaScript runtime built on Chrome's V8 JavaScript engine"
 HOMEPAGE="https://nodejs.org/"
@@ -22,9 +22,9 @@ REQUIRED_USE="
 "
 
 RDEPEND="
-	>=dev-libs/libuv-1.34.0:=
+	>=dev-libs/libuv-1.34.2:=
 	>=net-dns/c-ares-1.15.0
-	>=net-libs/nghttp2-1.39.2
+	>=net-libs/nghttp2-1.40.0
 	sys-libs/zlib
 	icu? ( >=dev-libs/icu-64.2:= )
 	ssl? ( >=dev-libs/openssl-1.1.1:0= )
@@ -43,6 +43,14 @@ PATCHES=(
 )
 RESTRICT="test"
 S="${WORKDIR}/node-v${PV}"
+
+pkg_pretend() {
+	(use x86 && ! use cpu_flags_x86_sse2) && \
+		die "Your CPU doesn't support the required SSE2 instruction."
+
+	( [[ ${MERGE_TYPE} != "binary" ]] && ! test-flag-CXX -std=c++11 ) && \
+		die "Your compiler doesn't support C++11. Use GCC 4.8, Clang 3.3 or newer."
+}
 
 src_prepare() {
 	tc-export CC CXX PKG_CONFIG
@@ -80,7 +88,7 @@ src_prepare() {
 	fi
 
 	# We need to disable mprotect on two files when it builds Bug 694100.
-	use pax_kernel && PATCHES+=( "${FILESDIR}"/${PN}-13.2.0-paxmarking.patch )
+	use pax_kernel && PATCHES+=( "${FILESDIR}"/${PN}-13.8.0-paxmarking.patch )
 
 	default
 }
@@ -95,7 +103,7 @@ src_configure() {
 	use icu && myconf+=( --with-intl=system-icu ) || myconf+=( --with-intl=none )
 	use inspector || myconf+=( --without-inspector )
 	use npm || myconf+=( --without-npm )
-	use snapshot && myconf+=( --with-snapshot )
+	use snapshot || myconf+=( --without-node-snapshot )
 	use ssl && myconf+=( --shared-openssl --openssl-use-def-ca-store ) || myconf+=( --without-ssl )
 
 	local myarch=""
