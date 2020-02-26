@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -8,7 +8,7 @@ PYTHON_REQ_USE='threads(+)'
 
 WAF_PV=2.0.9
 
-inherit eapi7-ver flag-o-matic gnome2-utils pax-utils python-r1 toolchain-funcs waf-utils xdg-utils
+inherit bash-completion-r1 eapi7-ver flag-o-matic gnome2-utils pax-utils python-r1 toolchain-funcs waf-utils xdg-utils
 
 DESCRIPTION="Media player based on MPlayer and mplayer2"
 HOMEPAGE="https://mpv.io/ https://github.com/mpv-player/mpv"
@@ -59,11 +59,13 @@ REQUIRED_USE="
 RESTRICT="!test? ( test )"
 
 COMMON_DEPEND="
+	!!app-shells/mpv-bash-completion
 	>=media-video/ffmpeg-4.0:0=[encode,threads,vaapi?,vdpau?]
 	alsa? ( >=media-libs/alsa-lib-1.0.18 )
-	archive? ( >=app-arch/libarchive-3.0.0:= )
+	archive? ( >=app-arch/libarchive-3.4.0:= )
 	bluray? ( >=media-libs/libbluray-0.3.0:= )
-	cdda? ( dev-libs/libcdio-paranoia )
+	cdda? ( dev-libs/libcdio-paranoia
+			dev-libs/libcdio:= )
 	drm? ( x11-libs/libdrm )
 	dvd? (
 		>=media-libs/libdvdnav-4.2.0:=
@@ -97,7 +99,7 @@ COMMON_DEPEND="
 	vaapi? ( x11-libs/libva:=[drm?,X?,wayland?] )
 	vdpau? ( x11-libs/libvdpau )
 	vulkan? (
-		media-libs/libplacebo[vulkan]
+		media-libs/libplacebo:=[vulkan]
 		media-libs/shaderc
 	)
 	wayland? (
@@ -123,9 +125,9 @@ COMMON_DEPEND="
 DEPEND="${COMMON_DEPEND}
 	${PYTHON_DEPS}
 	virtual/pkgconfig
-	cuda? ( >=media-libs/nv-codec-headers-8.1.24.1 )
-	doc? (  dev-python/docutils
-			dev-python/rst2pdf )
+	dev-python/docutils
+	cuda? ( >=media-libs/nv-codec-headers-8.2.15.7 )
+	doc? ( dev-python/rst2pdf )
 	dvb? ( virtual/linuxtv-dvb-headers )
 	test? ( >=dev-util/cmocka-1.0.0 )
 "
@@ -152,8 +154,6 @@ src_configure() {
 
 	local mywafargs=(
 		--confdir="${EPREFIX}/etc/${PN}"
-		--docdir="${EPREFIX}/usr/share/doc/${PF}"
-		--htmldir="${EPREFIX}/usr/share/doc/${PF}/html"
 
 		$(usex cli '' '--disable-cplayer')
 		$(use_enable libmpv libmpv-shared)
@@ -166,7 +166,7 @@ src_configure() {
 
 		$(use_enable doc html-build)
 		$(use_enable doc pdf-build)
-		$(use_enable doc manpage-build)
+		--enable-manpage-build
 		$(use_enable cplugins)
 		$(use_enable test)
 
@@ -233,6 +233,7 @@ src_configure() {
 		# HWaccels:
 		# Automagic Video Toolbox HW acceleration. See Gentoo bug 577332.
 		$(use_enable cuda cuda-hwaccel)
+		$(use_enable cuda cuda-interop)
 
 		# TV features:
 		$(use_enable dvb dvbin)
@@ -253,6 +254,7 @@ src_configure() {
 		--disable-egl-android
 		--disable-uwp
 		--disable-audiounit
+		--disable-macos-media-player
 		--disable-wasapi
 		--disable-ios-gl
 		--disable-macos-touchbar
@@ -260,6 +262,11 @@ src_configure() {
 		--disable-tvos
 		--disable-egl-angle-win32
 	)
+
+	mywafargs+=(
+		--bashdir="$(get_bashcompdir)"
+		--zshdir="${EPREFIX}"/usr/share/zsh/site-functions
+)
 
 	# Create reproducible non-live builds.
 	[[ ${PV} != *9999* ]] && mywafargs+=(--disable-build-date)
@@ -326,17 +333,6 @@ pkg_postinst() {
 		elog "Since version 0.25.0 the 'opengl' USE flag is mapped to"
 		elog "the 'opengl' video output and no longer explicitly requires"
 		elog "X11 or Mac OS Aqua. Consider enabling the 'opengl' USE flag."
-	fi
-
-	if use cli && ! has_version 'app-shells/mpv-bash-completion'; then
-		elog "If you want to have command-line completion via bash-completion,"
-		elog "please install app-shells/mpv-bash-completion."
-	fi
-
-	if use cli && [[ -n ${REPLACING_VERSIONS} ]] &&
-			has_version 'app-shells/mpv-bash-completion'; then
-		elog "If command-line completion doesn't work after mpv update,"
-		elog "please rebuild app-shells/mpv-bash-completion."
 	fi
 
 	elog "If you want URL support, please install net-misc/youtube-dl."
