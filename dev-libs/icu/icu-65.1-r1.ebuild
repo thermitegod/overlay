@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{6,7,8} )
 inherit autotools flag-o-matic multilib-minimal python-any-r1 toolchain-funcs
 
 DESCRIPTION="International Components for Unicode"
-HOMEPAGE="http://www.icu-project.org/"
+HOMEPAGE="http://site.icu-project.org/"
 SRC_URI="https://github.com/unicode-org/icu/releases/download/release-${PV//./-}/icu4c-${PV//./_}-src.tgz"
 
 LICENSE="BSD"
@@ -31,6 +31,7 @@ MULTILIB_CHOST_TOOLS=(
 PATCHES=(
 	"${FILESDIR}/${PN}-65.1-remove-bashisms.patch"
 	"${FILESDIR}/${PN}-64.1-data_archive_generation.patch"
+	"${FILESDIR}/${PN}-65.1-integer-overflow.patch" # bug 710758
 )
 
 src_prepare() {
