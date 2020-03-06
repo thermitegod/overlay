@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -16,7 +16,7 @@ else
 		MY_PV=${SNAPSHOT_COMMIT}
 		MY_P=Vulkan-Loader-${SNAPSHOT_COMMIT}
 	fi
-	KEYWORDS="~amd64 ~x86"
+	KEYWORDS="~amd64 ~ppc64 ~x86"
 	SRC_URI="https://github.com/KhronosGroup/Vulkan-Loader/archive/${MY_PV}.tar.gz -> ${P}.tar.gz"
 	S="${WORKDIR}"/${MY_P}
 fi
@@ -41,7 +41,7 @@ DEPEND="${PYTHON_DEPS}
 
 multilib_src_configure() {
 	# Integrated clang assembler doesn't work with x86 - Bug #698164
-	if [[ tc-is-clang && ${ABI} == x86 ]]; then
+	if tc-is-clang && [[ ${ABI} == x86 ]]; then
 		append-cflags -fno-integrated-as
 	fi
 
