@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -33,9 +33,6 @@ DEPEND="${RDEPEND}
 # https://github.com/google/shaderc/issues/470
 RESTRICT=test
 
-PATCHES=("${FILESDIR}/${P}-fix-glslang-link-order.patch"
-		 "${FILESDIR}/${P}-fix-build-against-new-glslang.patch" )
-
 python_check_deps() {
 	if use test; then
 		has_version --host-root "dev-python/nose[${PYTHON_USEDEP}]"
@@ -50,16 +47,6 @@ src_prepare() {
 	sed -i \
 		-e "s|\$<TARGET_FILE:spirv-dis>|${EPREFIX}/usr/bin/spirv-dis|" \
 		glslc/test/CMakeLists.txt || die
-
-	# Disable git versioning
-#	sed -i -e '/build-version/d' glslc/CMakeLists.txt || die
-
-	# Manually create build-version.inc as we disabled git versioning
-#	cat <<- EOF > glslc/src/build-version.inc || die
-#		"${P}\n"
-#		"$(best_version dev-util/spirv-tools)\n"
-#		"$(best_version dev-util/glslang)\n"
-#	EOF
 
 	cmake-utils_src_prepare
 }
