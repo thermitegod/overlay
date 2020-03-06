@@ -3,7 +3,6 @@
 
 EAPI=7
 PYTHON_COMPAT=( python3_{6,7,8} pypy3)
-PATCHES=( "${FILESDIR}"/${P}-pytest-runner.patch )
 
 inherit distutils-r1
 
