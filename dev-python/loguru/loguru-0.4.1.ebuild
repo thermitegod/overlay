@@ -1,4 +1,4 @@
-# Copyright 2019 Gentoo Authors
+# Copyright 2019-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -13,35 +13,12 @@ SRC_URI="https://github.com/Delgan/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="doc test"
-RESTRICT="!test? ( test )"
+KEYWORDS="~amd64 ~ppc64 ~x86"
 
-RDEPEND=">=dev-python/colorama-0.3.4[${PYTHON_USEDEP}]"
-
-DEPEND="
-	doc? (
-		dev-python/sphinx[${PYTHON_USEDEP}]
-		dev-python/sphinx_rtd_theme[${PYTHON_USEDEP}]
-	)
-	test? (
-		${RDEPEND}
-		>=dev-python/pytest-4.5.0[${PYTHON_USEDEP}]
-	)
+RDEPEND="
+	$(python_gen_cond_dep 'dev-python/aiocontextvars[${PYTHON_USEDEP}]' 'python3_6')
+	>=dev-python/colorama-0.3.4[${PYTHON_USEDEP}]
 "
-
-BDEPEND="dev-python/setuptools[${PYTHON_USEDEP}]"
-
-python_compile_all() {
-	use doc && esetup.py build_sphinx
-}
-
-python_install_all() {
-	use doc && HTML_DOCS=( "${BUILD_DIR}"/sphinx/html/. )
-	distutils-r1_python_install_all
-}
-
-python_test() {
-	distutils_install_for_testing
-	pytest -vv || die "Tests failed with ${EPYTHON}"
-}
+# filesystem buffering tests may fail
+# on tmpfs with 64k PAGESZ, but pass fine on ext4
+distutils_enable_tests pytest
