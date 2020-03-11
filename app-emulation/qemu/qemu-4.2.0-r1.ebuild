@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="7"
@@ -14,7 +14,7 @@ inherit eutils linux-info toolchain-funcs multilib python-r1 \
 	udev fcaps readme.gentoo-r1 pax-utils l10n xdg-utils
 
 if [[ ${PV} = *9999* ]]; then
-	EGIT_REPO_URI="git://git.qemu.org/qemu.git"
+	EGIT_REPO_URI="https://git.qemu.org/git/qemu.git"
 	EGIT_SUBMODULES=(
 		slirp
 		tests/fp/berkeley-{test,soft}float-3
@@ -23,8 +23,8 @@ if [[ ${PV} = *9999* ]]; then
 	inherit git-r3
 	SRC_URI=""
 else
-	SRC_URI="http://wiki.qemu-project.org/download/${P}.tar.xz"
-	KEYWORDS="~amd64 ~arm64 ~ppc ~ppc64 ~x86"
+	SRC_URI="https://download.qemu.org/${P}.tar.xz"
+	KEYWORDS="amd64 ~arm64 ~ppc ~ppc64 x86"
 fi
 
 DESCRIPTION="QEMU + Kernel-based Virtual Machine userland tools"
@@ -64,7 +64,7 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}
 	qemu_softmmu_targets_ppc? ( fdt )
 	qemu_softmmu_targets_riscv32? ( fdt )
 	qemu_softmmu_targets_riscv64? ( fdt )
-	static? ( static-user !alsa !gtk !opengl !pulseaudio !snappy !plugins )
+	static? ( static-user !alsa !gtk !opengl !pulseaudio !plugins !rbd !snappy )
 	static-user? ( !plugins )
 	virtfs? ( xattr )
 	vte? ( gtk )
@@ -135,7 +135,7 @@ SOFTMMU_TOOLS_DEPEND="
 	)
 	png? ( media-libs/libpng:0=[static-libs(+)] )
 	pulseaudio? ( media-sound/pulseaudio )
-	rbd? ( sys-cluster/ceph[static-libs(+)] )
+	rbd? ( sys-cluster/ceph )
 	sasl? ( dev-libs/cyrus-sasl[static-libs(+)] )
 	sdl? (
 		media-libs/libsdl2[X]
