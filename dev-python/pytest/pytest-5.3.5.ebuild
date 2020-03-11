@@ -3,17 +3,18 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{6,7,8} )
+DISTUTILS_USE_SETUPTOOLS=rdepend
+PYTHON_COMPAT=( python3_{6,7,8} pypy3 )
 
 inherit distutils-r1
 
 DESCRIPTION="Simple powerful testing with Python"
-HOMEPAGE="http://pytest.org/"
+HOMEPAGE="https://pytest.org/"
 SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~arm64 ~hppa ~x86"
 IUSE="test"
 RESTRICT="!test? ( test )"
 
@@ -24,10 +25,9 @@ PY_VER="1.5.0"
 # support, which only came in py3.6.
 RDEPEND="
 	>=dev-python/attrs-17.4.0[${PYTHON_USEDEP}]
-	$(python_gen_cond_dep 'dev-python/importlib_metadata[${PYTHON_USEDEP}]' python3_{5,6,7} )
+	$(python_gen_cond_dep 'dev-python/importlib_metadata[${PYTHON_USEDEP}]' python3_{6,7} )
 	>=dev-python/more-itertools-4.0.0[${PYTHON_USEDEP}]
 	dev-python/packaging[${PYTHON_USEDEP}]
-	$(python_gen_cond_dep 'dev-python/pathlib2[${PYTHON_USEDEP}]' python3_5 )
 	>=dev-python/pluggy-0.12[${PYTHON_USEDEP}]
 	>=dev-python/py-${PY_VER}[${PYTHON_USEDEP}]
 	dev-python/six[${PYTHON_USEDEP}]
@@ -41,7 +41,6 @@ DEPEND="${RDEPEND}
 		dev-python/nose[${PYTHON_USEDEP}]
 		dev-python/mock[${PYTHON_USEDEP}]
 		dev-python/requests[${PYTHON_USEDEP}]
-		>=dev-python/setuptools-40[${PYTHON_USEDEP}]
 		dev-python/xmlschema[${PYTHON_USEDEP}]
 		!!dev-python/flaky
 	)"
@@ -61,6 +60,6 @@ python_prepare_all() {
 }
 
 python_test() {
-	"${EPYTHON}" "${BUILD_DIR}"/lib/pytest.py -vv --lsof -rfsxX \
+	"${EPYTHON}" -m pytest -vv --lsof -rfsxX \
 		|| die "tests failed with ${EPYTHON}"
 }
