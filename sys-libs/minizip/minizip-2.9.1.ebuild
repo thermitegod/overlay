@@ -3,6 +3,7 @@
 
 EAPI=7
 
+CMAKE_ECLASS="cmake"
 inherit cmake-multilib
 
 DESCRIPTION="zip manipulation library found in the zlib distribution"
@@ -11,10 +12,11 @@ SRC_URI="https://github.com/nmoinvaz/minizip/archive/${PV}.tar.gz -> ${P}.tar.gz
 LICENSE="ZLIB"
 SLOT="0/2" # libminizip.so version
 
-KEYWORDS="alpha amd64 arm arm64 hppa ia64 m68k ~mips ppc ppc64 ~riscv s390 sh sparc x86 ~amd64-fbsd ~x86-fbsd"
+KEYWORDS="~amd64 ~x86"
 IUSE="bzip2 libressl lzma ssl test +zlib"
 
 RDEPEND="
+	!sys-libs/zlib[minizip]
 	bzip2? ( app-arch/bzip2 )
 	ssl? (
 		!libressl? ( dev-libs/openssl:0= )
@@ -37,5 +39,5 @@ multilib_src_configure() {
 		-DMZ_OPENSSL="$(usex ssl)"
 		-DINSTALL_INC_DIR="${EPREFIX}/usr/include/${PN}"
 	)
-	cmake-utils_src_configure
+	cmake_src_configure
 }
