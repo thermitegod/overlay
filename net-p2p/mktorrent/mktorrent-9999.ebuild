@@ -2,30 +2,22 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-inherit toolchain-funcs
+inherit toolchain-funcs git-r3
 
 DESCRIPTION="Simple command line utility to create BitTorrent metainfo files"
 HOMEPAGE="https://github.com/Rudde/mktorrent"
 
-if [[ ${PV} == *9999 ]]; then
-	inherit git-r3
-	EGIT_REPO_URI="https://github.com/Rudde/mktorrent.git"
-else
-	COMMIT_ID="96090fb175f3cef17ae2499e98c2868363106927"
-	SRC_URI="https://github.com/Rudde/${PN}/archive/${COMMIT_ID}.tar.gz -> ${PN}-${COMMIT_ID}.tar.gz"
-	KEYWORDS="~amd64 ~arm ~x86"
-	S="${WORKDIR}/${PN}-${COMMIT_ID}"
-fi
+EGIT_REPO_URI="https://github.com/Rudde/mktorrent.git"
 
-LICENSE="GPL-2"
+LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~x86"
+KEYWORDS=""
 IUSE="threads +ssl libressl debug"
 
 RDEPEND="
 	ssl? (
-		!libressl? ( dev-libs/openssl:0 )
-		libressl? ( dev-libs/libressl:0 )
+		!libressl? ( dev-libs/openssl:0= )
+		libressl? ( dev-libs/libressl:0= )
 	)
 "
 

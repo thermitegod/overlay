@@ -9,9 +9,9 @@ DESCRIPTION="Compiles finite state machines from regular languages into executab
 HOMEPAGE="https://www.colm.net/open-source/ragel/"
 SRC_URI="https://www.colm.net/files/ragel/${P}.tar.gz"
 
-LICENSE="GPL-2"
+LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~arm64 ~ia64 ~x86"
+KEYWORDS="~amd64 ~arm ~arm64 ~ia64 ~x86 ~amd64-linux ~x86-linux"
 IUSE="vim-syntax"
 
 DEPEND="~dev-util/colm-0.13.0.7"
@@ -20,6 +20,10 @@ RDEPEND="${DEPEND}"
 src_prepare() {
 	default
 	eautoreconf
+}
+
+src_configure() {
+	econf --disable-static
 }
 
 src_test() {
@@ -33,4 +37,5 @@ src_install() {
 		doins ragel.vim
 	fi
 	default
+	find "${D}" -name '*.la' -delete || die
 }

@@ -2,26 +2,18 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-
-if [[ ${PV} == "9999" ]] ; then
-	AUTOTOOLS_AUTORECONF="1"
-	EGIT_REPO_URI="https://github.com/thermitegod/mcomix-lite"
-	inherit git-r3
-else
-	SRC_URI=""
-	KEYWORDS="amd64"
-fi
-
 PYTHON_COMPAT=( python3_8 )
 
-inherit distutils-r1 xdg-utils
+inherit distutils-r1 xdg-utils git-r3
 
 DESCRIPTION="A fork of mcomix, a GTK3 image viewer for comic book archives"
 HOMEPAGE="https://github.com/thermitegod/mcomix-lite"
 
+EGIT_REPO_URI="https://github.com/thermitegod/mcomix-lite"
+
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS=""
 IUSE="+7z lha +pdf +rar"
 
 RDEPEND="${DEPEND}

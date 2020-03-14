@@ -12,11 +12,12 @@ HOMEPAGE="https://www.gtk.org/"
 LICENSE="LGPL-2.1+"
 SLOT="2"
 IUSE="dbus debug elibc_glibc fam gtk-doc kernel_linux +mime selinux static-libs systemtap test utils xattr"
+RESTRICT="!test? ( test )"
 
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~riscv ~s390 ~sh ~sparc ~x86 ~amd64-linux ~x86-linux"
 
 # * libelf isn't strictly necessary, but makes gresource tool more useful, and
-# the check is automagic in gio/meon.build. gresource is not a multilib tool
+# the check is automagic in gio/meson.build. gresource is not a multilib tool
 # right now, thus it doesn't matter if non-native ABI libelf exists or not
 # (non-native binary is overwritten, it doesn't matter if libelf was linked to).
 # * Technically static-libs is needed on zlib, util-linux and perhaps more, but
@@ -117,10 +118,6 @@ src_prepare() {
 	sed -i -e '/subdir.*fuzzing/d' meson.build || die
 
 	# gdbus-codegen is a separate package
-	sed -i -e 's/install.*true/install : false/g' gio/gdbus-2.0/codegen/meson.build || die
-	# Older than meson-0.50 doesn't know about install kwarg for configure_file; for that we need to remove the install_dir kwarg.
-	# Upstream will remove the install kwarg in a future version to require only meson-0.49.2 or newer, at which point the
-	# install_dir removal only should be kept.
 	sed -i -e '/install_dir/d' gio/gdbus-2.0/codegen/meson.build || die
 
 	# Same kind of meson-0.50 issue with some installed-tests files; will likely be fixed upstream soon
@@ -168,6 +165,7 @@ multilib_src_configure() {
 		$(meson_use fam)
 		-Dinstalled_tests=false
 		-Dnls=enabled
+		-Doss_fuzz=disabled
 	)
 	meson_src_configure
 }

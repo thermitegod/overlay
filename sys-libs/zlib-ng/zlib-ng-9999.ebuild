@@ -13,13 +13,13 @@ EGIT_REPO_URI="https://github.com/zlib-ng/zlib-ng"
 
 LICENSE="ZLIB"
 SLOT="0/1"
-KEYWORDS="alpha amd64 arm arm64 hppa ia64 m68k ~mips ppc ppc64 ~riscv s390 sh sparc x86 ~amd64-fbsd ~x86-fbsd"
+KEYWORDS=""
 IUSE="static-libs minizip"
 
 DEPEND="( ${AUTOTOOLS_DEPEND} )"
 RDEPEND="
 		minizip? ( sys-libs/minizip )
-"
+		"
 
 multilib_src_configure() {
 	# not an autoconf script, so can't use econf

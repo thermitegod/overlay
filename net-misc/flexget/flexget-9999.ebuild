@@ -3,25 +3,18 @@
 # $Id$
 
 EAPI=7
-
 PYTHON_COMPAT=( python3_{6,7,8} )
 
-inherit distutils-r1
-
-if [[ ${PV} != 9999 ]]; then
-	MY_P="FlexGet-${PV}"
-	SRC_URI="mirror://pypi/F/FlexGet/${MY_P}.tar.gz"
-	KEYWORDS="~amd64 ~x86"
-else
-	inherit git-r3
-	EGIT_REPO_URI="https://github.com/Flexget/Flexget.git"
-fi
+inherit distutils-r1 git-r3
 
 DESCRIPTION="Multipurpose automation tool for content like torrents, nzbs, podcasts, comics"
 HOMEPAGE="http://flexget.com/"
 
+EGIT_REPO_URI="https://github.com/Flexget/Flexget.git"
+
 LICENSE="MIT"
 SLOT="0"
+KEYWORDS=""
 IUSE="test"
 
 DEPEND="

@@ -24,12 +24,11 @@ REQUIRED_USE="test? ( sqlite )"
 
 DEPEND="
 	dev-python/setuptools[${PYTHON_USEDEP}]
-	test? (
-		dev-python/pytest[${PYTHON_USEDEP}]
-		dev-python/mock[${PYTHON_USEDEP}]
-	)"
+	test? ( dev-python/mock[${PYTHON_USEDEP}] )"
 
 S="${WORKDIR}/${MY_P}"
+
+distutils_enable_tests pytest
 
 python_prepare_all() {
 	# Disable tests hardcoding function call counts specific to Python versions.
@@ -43,10 +42,6 @@ python_compile() {
 		append-cflags -fno-strict-aliasing
 	fi
 	distutils-r1_python_compile
-}
-
-python_test() {
-	pytest -vv test || die "Testsuite failed under ${EPYTHON}"
 }
 
 python_install_all() {

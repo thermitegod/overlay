@@ -12,6 +12,7 @@ EGIT_REPO_URI="https://github.com/thermitegod/spacefm"
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
+KEYWORDS=""
 IUSE="deprecated-hw gtk2 +gtk3 +git +nls +startup-notification +video-thumbnails"
 
 RDEPEND="dev-libs/glib:2
@@ -23,7 +24,7 @@ RDEPEND="dev-libs/glib:2
 	x11-libs/pango
 	x11-libs/libX11
 	x11-misc/shared-mime-info
-	gtk2? ( gtk3? ( >=x11-libs/gtk+-3.24.1:3 ) !gtk3? ( x11-libs/gtk+:2 ) )
+	gtk2? ( gtk3? ( x11-libs/gtk+:3 ) !gtk3? ( x11-libs/gtk+:2 ) )
 	!gtk2? ( x11-libs/gtk+:3 )
 	git? ( dev-vcs/git )
 	startup-notification? ( x11-libs/startup-notification )

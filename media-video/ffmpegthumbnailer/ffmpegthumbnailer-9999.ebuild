@@ -3,21 +3,16 @@
 
 EAPI=7
 
-inherit cmake
+inherit cmake git-r3
 
 DESCRIPTION="Lightweight video thumbnailer that can be used by file managers"
 HOMEPAGE="https://github.com/dirkvdb/ffmpegthumbnailer"
 
-if [[ ${PV} != *9999* ]]; then
-	SRC_URI="https://github.com/dirkvdb/${PN}/releases/download/${PV}/${P}.tar.bz2"
-else
-	EGIT_REPO_URI="https://github.com/dirkvdb/ffmpegthumbnailer"
-	inherit git-r3
-fi
+EGIT_REPO_URI="https://github.com/dirkvdb/ffmpegthumbnailer"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~alpha amd64 arm ~arm64 hppa ia64 ppc ppc64 sparc x86"
+KEYWORDS=""
 IUSE="gnome gtk jpeg libav png test"
 RESTRICT="!test? ( test )"
 

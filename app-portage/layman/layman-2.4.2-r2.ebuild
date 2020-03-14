@@ -22,6 +22,7 @@ HOMEPAGE="https://wiki.gentoo.org/wiki/Layman"
 LICENSE="GPL-2"
 SLOT="0"
 IUSE="bazaar cvs darcs +git gpg g-sorcery mercurial sqlite squashfs subversion sync-plugin-portage test"
+RESTRICT="!test? ( test )"
 
 DEPEND="test? ( dev-vcs/subversion )
 	"
@@ -60,7 +61,7 @@ pkg_setup() {
 	layman_check_kernel_config
 }
 
-python_prepare_all()  {
+python_prepare_all() {
 	python_setup
 	esetup.py setup_plugins
 	distutils-r1_python_prepare_all

@@ -8,6 +8,7 @@ inherit eutils meson
 if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="https://anongit.freedesktop.org/git/virglrenderer.git"
 	inherit git-r3
+	KEYWORDS=""
 else
 	SRC_URI="https://dev.gentoo.org/~tamiko/distfiles/${P}.tar.xz"
 	KEYWORDS="~amd64 ~arm64 ~x86"

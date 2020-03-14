@@ -3,23 +3,16 @@
 
 EAPI=7
 
-inherit cmake-utils
-
-if [[ ${PV} = *9999 ]]; then
-	inherit git-r3
-	EGIT_REPO_URI="https://github.com/vitalif/${PN}2.git"
-else
-	inherit vcs-snapshot
-	COMMIT="3c90425b8f46b62365ec3d84de628163865dbb1e"
-	SRC_URI="https://github.com/vitalif/${PN}2/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
-fi
+inherit cmake-utils git-r3
 
 DESCRIPTION="An open source Linux client for Google Drive"
 HOMEPAGE="https://github.com/vitalif/grive2"
 
+EGIT_REPO_URI="https://github.com/vitalif/${PN}2.git"
+
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 IUSE=""
 
 	#|| ( net-misc/curl[curl_ssl_openssl] net-misc/curl[curl_ssl_gnutls] )

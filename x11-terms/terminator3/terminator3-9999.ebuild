@@ -2,18 +2,17 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-
 PYTHON_COMPAT=( python3_{6,7,8} )
+
+inherit distutils-r1 virtualx git-r3
 
 DESCRIPTION="Multiple GNOME terminals in one window"
 HOMEPAGE="https://launchpad.net/terminator https://github.com/thermitegod/terminator3"
 EGIT_REPO_URI="https://github.com/thermitegod/terminator3"
 
-inherit distutils-r1 virtualx git-r3
-
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 ~ppc x86"
+KEYWORDS=""
 IUSE="+dbus"
 
 RDEPEND="
