@@ -25,7 +25,7 @@ LICENSE="LGPL-2.1"
 IUSE="
 	apparmor audit +caps +dbus dtrace firewalld fuse glusterfs iscsi
 	iscsi-direct +libvirtd lvm libssh lxc +macvtap nfs nls numa openvz
-	parted pcap phyp policykit +qemu rbd sasl selinux +udev +vepa
+	parted pcap policykit +qemu rbd sasl selinux +udev +vepa
 	virtualbox virt-network wireshark-plugins xen zfs
 "
 
@@ -126,8 +126,8 @@ DEPEND="${RDEPEND}
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-6.0.0-do-not-use-sysconf.patch
-	"${FILESDIR}"/${PN}-1.2.16-fix_paths_in_libvirt-guests_sh.patch
-	"${FILESDIR}"/${PN}-5.2.0-fix-paths-for-apparmor.patch
+	"${FILESDIR}"/${PN}-6.0.0-fix_paths_in_libvirt-guests_sh.patch
+	"${FILESDIR}"/${PN}-6.1.0-fix-paths-for-apparmor.patch
 )
 
 pkg_setup() {
@@ -252,7 +252,6 @@ my_src_configure() {
 		$(use_with openvz)
 		$(use_with parted storage-disk)
 		$(use_with pcap libpcap)
-		$(use_with phyp)
 		$(use_with policykit polkit)
 		$(use_with qemu)
 		$(use_with qemu yajl)
