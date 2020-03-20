@@ -29,7 +29,7 @@ DOCS+=( README.md DOCS/{client-api,interface}-changes.rst )
 LICENSE="LGPL-2.1+ GPL-2+ BSD ISC"
 SLOT="0"
 IUSE="+alsa aqua archive bluray cdda +cli coreaudio cplugins cuda debug doc drm dvb
-	dvd +egl gamepad gbm +iconv jack javascript jpeg lcms +libass libcaca libmpv +lua
+	dvd +egl gamepad gbm +iconv jack javascript jpeg lcms libcaca libmpv +lua
 	luajit openal +opengl oss pulseaudio raspberry-pi rubberband sdl
 	selinux test tools +uchardet vaapi vdpau vulkan wayland +X +xv zlib zimg"
 
@@ -61,6 +61,8 @@ RESTRICT="!test? ( test )"
 COMMON_DEPEND="
 	!!app-shells/mpv-bash-completion
 	>=media-video/ffmpeg-4.0:0=[encode,threads,vaapi?,vdpau?]
+	>=media-libs/libass-0.12.1:=[fontconfig,harfbuzz]
+	virtual/ttf-fonts
 	alsa? ( >=media-libs/alsa-lib-1.0.18 )
 	archive? ( >=app-arch/libarchive-3.4.0:= )
 	bluray? ( >=media-libs/libbluray-0.3.0:= )
@@ -81,10 +83,6 @@ COMMON_DEPEND="
 	javascript? ( >=dev-lang/mujs-1.0.0 )
 	jpeg? ( virtual/jpeg:0 )
 	lcms? ( >=media-libs/lcms-2.6:2 )
-	libass? (
-		>=media-libs/libass-0.12.1:=[fontconfig,harfbuzz]
-		virtual/ttf-fonts
-	)
 	libcaca? ( >=media-libs/libcaca-0.99_beta18 )
 	lua? (
 		!luajit? ( <dev-lang/lua-5.3:= )
@@ -173,8 +171,6 @@ src_configure() {
 		$(use_enable lua)
 		$(usex luajit '--lua=luajit' '')
 		$(use_enable javascript)
-		$(use_enable libass)
-		$(use_enable libass libass-osd)
 		$(use_enable zlib)
 		$(use_enable bluray libbluray)
 		$(use_enable dvd dvdnav)
