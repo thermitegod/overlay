@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit linux-info xdg-utils git-r3
+inherit linux-info xdg-utils git-r3 meson
 
 DESCRIPTION="A multi-panel tabbed file manager"
 HOMEPAGE="https://github.com/thermitegod/spacefm"
@@ -13,10 +13,13 @@ EGIT_REPO_URI="https://github.com/thermitegod/spacefm"
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
 KEYWORDS=""
-IUSE="deprecated-hw gtk2 +gtk3 +git +nls +startup-notification +video-thumbnails"
+IUSE="deprecated-hw +gtk2 gtk3 +nls +startup-notification"
 
 RDEPEND="dev-libs/glib:2
 	dev-util/desktop-file-utils
+	>=dev-util/meson-0.49.0
+	dev-vcs/git
+	media-video/ffmpegthumbnailer
 	>=virtual/udev-143
 	virtual/freedesktop-icon-theme
 	x11-libs/cairo
@@ -26,28 +29,33 @@ RDEPEND="dev-libs/glib:2
 	x11-misc/shared-mime-info
 	gtk2? ( gtk3? ( x11-libs/gtk+:3 ) !gtk3? ( x11-libs/gtk+:2 ) )
 	!gtk2? ( x11-libs/gtk+:3 )
-	git? ( dev-vcs/git )
 	startup-notification? ( x11-libs/startup-notification )
-	video-thumbnails? ( media-video/ffmpegthumbnailer )"
+	"
 DEPEND="${RDEPEND}
 	dev-util/intltool
 	sys-devel/gettext
-	virtual/pkgconfig"
+	virtual/pkgconfig
+	"
 
 src_configure() {
-	econf \
-		--htmldir=/usr/share/doc/${PF}/html \
-		$(use_enable deprecated-hw) \
-		$(use_enable git) \
-		$(use_enable nls) \
-		$(use_enable startup-notification) \
-		$(use_enable video-thumbnails) \
-		--disable-pixmaps \
-		$(use_with gtk3 gtk3 "yes")
+	meson_src_configure
+#	local emesonargs=()
+
+#	econf \
+#		--htmldir=/usr/share/doc/${PF}/html \
+#		$(use_enable deprecated-hw) \
+#		$(use_enable nls) \
+#		$(use_enable startup-notification) \
+#		--disable-pixmaps \
+#		$(use_with gtk3 gtk3 "yes")
+}
+
+src_compile() {
+	meson_src_compile
 }
 
 src_install() {
-	emake DESTDIR="${D}" install
+	meson_src_install
 	einstalldocs
 	doman doc/*.1
 }
