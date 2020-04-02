@@ -11,7 +11,7 @@ SRC_URI="https://github.com/ebassi/graphene/releases/download/${PV}/${P}.tar.xz"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 arm arm64 ~hppa ia64 ppc ppc64 ~sparc x86"
+KEYWORDS="~amd64 ~arm ~arm64 ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 IUSE="cpu_flags_arm_neon cpu_flags_x86_sse2 doc +introspection test"
 RESTRICT="!test? ( test )"
 
@@ -28,13 +28,6 @@ BDEPEND="
 	virtual/pkgconfig
 "
 
-src_prepare() {
-	xdg_environment_reset
-	default
-	# Disable installed-tests
-	sed -e 's/install: true/install: false/g' -i src/tests/meson.build || die
-}
-
 multilib_src_configure() {
 	# TODO: Do we want G_DISABLE_ASSERT as buildtype=release would do upstream?
 	local emesonargs=(
@@ -45,7 +38,7 @@ multilib_src_configure() {
 		$(meson_use cpu_flags_x86_sse2 sse2)
 		$(meson_use cpu_flags_arm_neon arm_neon)
 		$(meson_use test tests)
-		-Dbenchmarks=false
+		-Dinstalled_tests=false
 	)
 	meson_src_configure
 }
