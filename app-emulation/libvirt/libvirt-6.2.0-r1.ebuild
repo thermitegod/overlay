@@ -332,7 +332,7 @@ my_src_install() {
 	newconfd "${FILESDIR}/libvirtd.confd-r5" libvirtd
 	newconfd "${FILESDIR}/libvirt-guests.confd" libvirt-guests
 
-	DOC_CONTENTS=$(<"${FILESDIR}/README.gentoo-r2")
+	DOC_CONTENTS=$(<"${FILESDIR}/README.gentoo-r3")
 	DISABLE_AUTOFORMATTING=true
 	readme.gentoo_create_doc
 }
