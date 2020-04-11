@@ -14,7 +14,6 @@ HOMEPAGE="https://zfsonlinux.org/"
 if [[ ${PV} == "9999" ]] ; then
 	inherit autotools git-r3 linux-mod
 	EGIT_REPO_URI="https://github.com/zfsonlinux/zfs.git"
-	KEYWORDS=""
 else
 	SRC_URI="https://github.com/zfsonlinux/${PN}/releases/download/${P}/${P}.tar.gz"
 	KEYWORDS="~amd64 ~arm64 ~ppc64"
