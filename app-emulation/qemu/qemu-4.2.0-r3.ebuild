@@ -220,6 +220,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.11.1-capstone_include_path.patch
 	"${FILESDIR}"/${PN}-4.0.0-sanitize-interp_info.patch
 	"${FILESDIR}"/${PN}-4.0.0-mkdir_systemtap.patch #684902
+	"${FILESDIR}"/${PN}-4.2.0-CVE-2020-11102.patch #716518
 	"${WORKDIR}"/patches
 )
 
@@ -496,10 +497,12 @@ qemu_src_configure() {
 	if [[ ! ${buildtype} == "user" ]] ; then
 		# audio options
 		local audio_opts=(
+			# Note: backend order matters here: #716202
+			# We iterate from higher-level to lower level.
+			$(usex pulseaudio pa "")
+			$(usev sdl)
 			$(usev alsa)
 			$(usev oss)
-			$(usev sdl)
-			$(usex pulseaudio pa "")
 		)
 		conf_opts+=(
 			--audio-drv-list=$(printf "%s," "${audio_opts[@]}")
