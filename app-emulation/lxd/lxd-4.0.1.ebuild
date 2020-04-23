@@ -10,7 +10,7 @@ LICENSE="Apache-2.0 BSD BSD-2 LGPL-3 MIT MPL-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 
-IUSE="+daemon +ipv6 +dnsmasq nls test tools"
+IUSE="+daemon +ipv6 +dnsmasq nls test tools zfs"
 
 inherit autotools bash-completion-r1 linux-info systemd user
 
@@ -32,7 +32,7 @@ DEPEND="
 RDEPEND="
 	daemon? (
 		app-arch/xz-utils
-		>=app-emulation/lxc-2.0.7[seccomp]
+		>=app-emulation/lxc-4.0.0[seccomp]
 		dev-libs/libuv
 		dev-libs/lzo
 		dev-util/xdelta:3
@@ -50,6 +50,7 @@ RDEPEND="
 		sys-fs/squashfs-tools
 		virtual/acl
 	)
+	zfs? ( sys-fs/zfs )
 "
 
 CONFIG_CHECK="
@@ -94,10 +95,13 @@ src_prepare() {
 
 	cd "${S}/_dist/deps/raft" || die "Can't cd to raft dir"
 	# Workaround for " * ACCESS DENIED:  open_wr:      /dev/zfs"
-	sed -i 's#zfs version | cut -f 2#< /sys/module/zfs/version cut -f 1#' configure.ac || die "Can't sed configure.ac for raft"
+	#sed -i 's#zfs version | cut -f 2#< /sys/module/zfs/version cut -f 1#' configure.ac || die "Can't sed configure.ac for raft"
 	eautoreconf
 
 	cd "${S}/_dist/deps/dqlite" || die "Can't cd to dqlite dir"
+
+	use zfs && addpredict /dev/zfs
+
 	eautoreconf
 
 }
