@@ -14,7 +14,7 @@ EGIT_REPO_URI="https://github.com/thermitegod/mcomix-lite"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="+7z lha +pdf +rar"
+IUSE="+7z +rar"
 
 RDEPEND="${DEPEND}
 	virtual/jpeg
@@ -22,8 +22,6 @@ RDEPEND="${DEPEND}
 	dev-python/loguru[${PYTHON_USEDEP}]
 	x11-libs/gdk-pixbuf
 	7z? ( app-arch/p7zip )
-	lha? ( app-arch/lha )
-	pdf? ( app-text/mupdf )
 	rar? ( app-arch/unrar )
 	!media-gfx/comix
 	!media-gfx/mcomix"
