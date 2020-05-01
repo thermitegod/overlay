@@ -8,7 +8,7 @@ PYTHON_REQ_USE="threads(+)"
 
 inherit distutils-r1 toolchain-funcs elisp-common
 
-MY_V="3.0a2"
+MY_V="3.0a3"
 
 DESCRIPTION="A Python to C compiler"
 HOMEPAGE="https://cython.org https://pypi.org/project/Cython/
@@ -17,7 +17,7 @@ SRC_URI="https://github.com/cython/cython/archive/${MY_V}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~alpha amd64 arm arm64 ~hppa ~ia64 ~mips ppc ppc64 ~riscv s390 sparc x86 ~x64-cygwin ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~x64-solaris ~x86-solaris"
+KEYWORDS=""
 IUSE="emacs test"
 RESTRICT="!test? ( test )"
 
