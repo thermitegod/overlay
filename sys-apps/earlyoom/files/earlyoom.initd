@@ -1,0 +1,29 @@
+#!/sbin/openrc-run
+# Copyright 1999-2020 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+LOGFILE=/var/log/earlyoom.log
+PIDFILE=/run/earlyoom.pid
+
+start()
+{
+	ebegin "Starting earlyoom"
+	start-stop-daemon \
+		--start \
+		--quiet \
+		--pidfile "${PIDFILE}" \
+		--background \
+		--make-pidfile \
+		--exec /bin/bash -- -c "exec /usr/bin/earlyoom ${EARLYOOM_ARGS} 2> \"${LOGFILE}\""
+	eend $?
+}
+
+stop()
+{
+	ebegin "Stopping earlyoom"
+	start-stop-daemon \
+		--stop \
+		--signal 15 \
+		--pidfile "${PIDFILE}"
+	eend $?
+}
