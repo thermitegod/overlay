@@ -14,7 +14,7 @@ start()
 		--pidfile "${PIDFILE}" \
 		--background \
 		--make-pidfile \
-		--exec /bin/bash -- -c "exec /usr/bin/earlyoom ${EARLYOOM_ARGS} 2> \"${LOGFILE}\""
+		--exec /usr/bin/earlyoom -- "${EARLYOOM_ARGS}" 2> "${LOGFILE}"
 	eend $?
 }
 

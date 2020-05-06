@@ -1,3 +1,5 @@
+# Disable reporting,
 # Sets memory levels to SIGTERM and SIGKILL at
-# and ignore swap
-EARLYOOM_ARGS="-m 2,1 -s 100"
+# Ignore swap
+# Prefered content to kill/not kill
+EARLYOOM_ARGS="-r0 -m 2,1 -s 100 --prefer ^Web Content$ --avoid ^(emerge|i3)$"
