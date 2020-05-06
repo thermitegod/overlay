@@ -12,7 +12,7 @@ SRC_URI="https://dev.gentoo.org/~floppym/dist/${P}.tar.xz"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~amd64 ~arm64 ~x86"
+KEYWORDS="~amd64 ~arm64 ~ppc64 ~x86"
 IUSE="vim-syntax"
 
 BDEPEND="
@@ -21,7 +21,7 @@ BDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}"/gn-gen-r3.patch
+	"${FILESDIR}"/gn-gen-r4.patch
 )
 
 pkg_setup() {
@@ -32,12 +32,13 @@ src_configure() {
 	python_setup
 	tc-export AR CC CXX
 	unset CFLAGS
-	set -- ${EPYTHON} build/gen.py --no-last-commit-position --no-strip
+	set -- ${EPYTHON} build/gen.py --no-last-commit-position --no-strip --no-static-libstdc++
 	echo "$@" >&2
 	"$@" || die
 	cat >out/last_commit_position.h <<-EOF || die
 	#ifndef OUT_LAST_COMMIT_POSITION_H_
 	#define OUT_LAST_COMMIT_POSITION_H_
+	#define LAST_COMMIT_POSITION_NUM ${PV##0.}
 	#define LAST_COMMIT_POSITION "${PV}"
 	#endif  // OUT_LAST_COMMIT_POSITION_H_
 	EOF
@@ -58,6 +59,6 @@ src_install() {
 
 	if use vim-syntax; then
 		insinto /usr/share/vim/vimfiles
-		doins -r tools/gn/misc/vim/{autoload,ftdetect,ftplugin,syntax}
+		doins -r misc/vim/{autoload,ftdetect,ftplugin,syntax}
 	fi
 }
