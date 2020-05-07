@@ -14,13 +14,10 @@ EGIT_REPO_URI="https://github.com/zlib-ng/zlib-ng"
 LICENSE="ZLIB"
 SLOT="0/1" # subslot = SONAME
 KEYWORDS=""
-IUSE="minizip static-libs"
-
-RDEPEND="
-	minizip? ( sys-libs/minizip )
-	"
+IUSE="static-libs minizip"
 
 DEPEND="( ${AUTOTOOLS_DEPEND} )"
+RDEPEND="minizip? ( sys-libs/minizip )"
 
 multilib_src_configure() {
 	# not an autoconf script, so can't use econf
@@ -37,7 +34,6 @@ multilib_src_compile() {
 
 multilib_src_install() {
 	emake install DESTDIR="${D}" LDCONFIG=:
-	gen_usr_ldscript -a z
 
-	use static-libs || rm -f "${ED}"/usr/$(get_libdir)/lib{z,minizip}.{a,la} #419645
+	use static-libs || rm -f "${ED}"/usr/$(get_libdir)/libz.{a,la} #419645
 }

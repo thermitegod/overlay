@@ -12,14 +12,12 @@ HOMEPAGE="https://github.com/zlib-ng/zlib-ng"
 EGIT_REPO_URI="https://github.com/zlib-ng/zlib-ng"
 
 LICENSE="ZLIB"
-SLOT="0/1"
+SLOT="0/1" # subslot = SONAME
 KEYWORDS=""
 IUSE="static-libs minizip"
 
 DEPEND="( ${AUTOTOOLS_DEPEND} )"
-RDEPEND="
-		minizip? ( sys-libs/minizip )
-		"
+RDEPEND="minizip? ( sys-libs/minizip )"
 
 multilib_src_configure() {
 	# not an autoconf script, so can't use econf
