@@ -61,8 +61,6 @@ RESTRICT="!test? ( test )"
 COMMON_DEPEND="
 	!!app-shells/mpv-bash-completion
 	>=media-video/ffmpeg-4.0:0=[encode,threads,vaapi?,vdpau?]
-	>=media-libs/libass-0.12.1:=[fontconfig,harfbuzz]
-	virtual/ttf-fonts
 	alsa? ( >=media-libs/alsa-lib-1.0.18 )
 	archive? ( >=app-arch/libarchive-3.4.0:= )
 	bluray? ( >=media-libs/libbluray-0.3.0:= )
@@ -83,6 +81,8 @@ COMMON_DEPEND="
 	javascript? ( >=dev-lang/mujs-1.0.0 )
 	jpeg? ( virtual/jpeg:0 )
 	lcms? ( >=media-libs/lcms-2.6:2 )
+	>=media-libs/libass-0.12.1:=[fontconfig,harfbuzz]
+	virtual/ttf-fonts
 	libcaca? ( >=media-libs/libcaca-0.99_beta18 )
 	lua? (
 		!luajit? ( <dev-lang/lua-5.3:= )
@@ -159,7 +159,7 @@ src_configure() {
 		--disable-static-build
 		# See deep down below for build-date.
 		--disable-optimize # Don't add '-O2' to CFLAGS.
-		$(use_enable debug debug-build)
+		$(usex debug '' '--disable-debug-build')
 
 		$(use_enable doc html-build)
 		$(use_enable doc pdf-build)
@@ -215,6 +215,7 @@ src_configure() {
 		$(use_enable libcaca caca)
 		$(use_enable jpeg)
 		$(use_enable vulkan shaderc)
+		$(use_enable vulkan libplacebo)
 		$(use_enable raspberry-pi rpi)
 		$(usex libmpv "$(use_enable opengl plain-gl)" '--disable-plain-gl')
 		$(usex opengl '' '--disable-gl')
