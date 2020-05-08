@@ -14,14 +14,14 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64 ~arm64 x86"
 IUSE="test"
+RESTRICT="!test? ( test )"
 
-RDEPEND="
-"
+RDEPEND=""
 DEPEND="${RDEPEND}
 	test? (
 		dev-python/pytest[${PYTHON_USEDEP}]
 	)
-"
+	"
 python_test() {
 	nosetests -v || die "Tests fail with ${EPYTHON}"
 }

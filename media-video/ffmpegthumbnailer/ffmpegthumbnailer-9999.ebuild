@@ -13,7 +13,7 @@ EGIT_REPO_URI="https://github.com/dirkvdb/ffmpegthumbnailer"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="gnome gtk jpeg libav png test"
+IUSE="gnome gtk jpeg png test"
 RESTRICT="!test? ( test )"
 
 REQUIRED_USE="gnome? ( gtk )
@@ -25,9 +25,8 @@ BDEPEND="
 RDEPEND="
 	gtk? ( dev-libs/glib:2= )
 	jpeg? ( virtual/jpeg:0= )
-	!libav? ( >=media-video/ffmpeg-2.7:0= )
-	libav? ( >=media-video/libav-11:0= )
 	png? ( media-libs/libpng:0= )
+	>=media-video/ffmpeg-2.7:0=
 "
 DEPEND="${RDEPEND}"
 

@@ -10,9 +10,8 @@ MY_PN="Flask-Cors"
 MY_P="${MY_PN}-${PV}"
 
 if [[ "${PV}" == "9999" ]]; then
-	inherit git-2
+	inherit git-r3
 	EGIT_REPO_URI="https://github.com/wcdolphin/${PN}.git"
-	SRC_URI=""
 else
 	SRC_URI="mirror://pypi/${MY_P:0:1}/${MY_PN}/${MY_P}.tar.gz -> ${P}.tar.gz"
 fi
@@ -49,7 +48,7 @@ python_prepare_all() {
 		local PYTHON_DOC_VERSION="${PYTHON_DOC_ATOM#dev-python/python-docs-}"
 		local PYTHON_DOC="/usr/share/doc/python-docs-${PYTHON_DOC_VERSION}/html"
 		local PYTHON_DOC_INVENTORY="${PYTHON_DOC}/objects.inv"
-		sed -i "s|'http://docs.python.org/': None|'${PYTHON_DOC}': '${PYTHON_DOC_INVENTORY}'|" docs/conf.py || die
+		sed -i "s|'https://docs.python.org/': None|'${PYTHON_DOC}': '${PYTHON_DOC_INVENTORY}'|" docs/conf.py || die
 	fi
 	distutils-r1_python_prepare_all
 }

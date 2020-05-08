@@ -1,7 +1,9 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
+
+inherit autotools bash-completion-r1 linux-info systemd
 
 DESCRIPTION="Fast, dense and secure container management"
 HOMEPAGE="https://linuxcontainers.org/lxd/introduction/"
@@ -11,8 +13,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 IUSE="+daemon +ipv6 +dnsmasq nls test tools zfs"
-
-inherit autotools bash-completion-r1 linux-info systemd user
+RESTRICT="!test? ( test )"
 
 SRC_URI="https://linuxcontainers.org/downloads/${PN}/${P}.tar.gz"
 
@@ -112,7 +113,7 @@ src_configure() {
 	econf --enable-replication --disable-amalgamation --disable-tcl --libdir="${EPREFIX}/usr/lib/lxd"
 
 	cd "${GOPATH}/deps/raft" || die "Can't cd to raft dir"
-	econf --libdir=${EPREFIX}/usr/lib/lxd
+	econf --libdir="${EPREFIX}"/usr/lib/lxd
 
 	cd "${GOPATH}/deps/dqlite" || die "Can't cd to dqlite dir"
 	export SQLITE_CFLAGS="-I${GOPATH}/deps/sqlite"

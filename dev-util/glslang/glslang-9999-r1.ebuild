@@ -9,4 +9,6 @@ HOMEPAGE="https://www.khronos.org/opengles/sdk/tools/Reference-Compiler/"
 LICENSE="BSD"
 SLOT="0"
 
+KEYWORDS=""
+
 RDEPEND="=media-libs/shaderc-9999-r1"

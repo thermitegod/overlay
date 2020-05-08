@@ -14,6 +14,7 @@ SLOT="0/2" # libminizip.so version
 
 KEYWORDS="~amd64 ~x86"
 IUSE="bzip2 libressl lzma ssl test +zlib"
+RESTRICT="!test? ( test )"
 
 RDEPEND="
 	!sys-libs/zlib[minizip]

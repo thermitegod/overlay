@@ -3,8 +3,8 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python2_7 python3_{6,7} )
-inherit bash-completion-r1 estack eutils llvm toolchain-funcs python-r1 linux-info
+PYTHON_COMPAT=( python3_{6,7,8} )
+inherit bash-completion-r1 estack eutils llvm toolchain-funcs prefix python-r1 linux-info
 
 MY_PV="${PV/_/-}"
 MY_PV="${MY_PV/-pre/-git}"
@@ -42,8 +42,8 @@ REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 RDEPEND="audit? ( sys-process/audit )
 	crypt? ( dev-libs/openssl:0= )
 	clang? (
-		sys-devel/clang
-		sys-devel/llvm
+		<sys-devel/clang-10:*
+		<sys-devel/llvm-10:*
 	)
 	demangle? ( sys-libs/binutils-libs:= )
 	gtk? ( x11-libs/gtk+:2 )
@@ -76,7 +76,7 @@ S="${S_K}/tools/perf"
 CONFIG_CHECK="~PERF_EVENTS ~KALLSYMS"
 
 pkg_setup() {
-	LLVM_MAX_SLOT=10 llvm_pkg_setup
+	use clang && LLVM_MAX_SLOT=10 llvm_pkg_setup
 }
 
 src_unpack() {
@@ -130,6 +130,11 @@ src_prepare() {
 
 	# The code likes to compile local assembly files which lack ELF markings.
 	find -name '*.S' -exec sed -i '$a.section .note.GNU-stack,"",%progbits' {} +
+
+	# Fix shebang to use python from prefix
+	if [[ -n "${EPREFIX}" ]]; then
+		hprefixify ${S_K}/scripts/bpf_helpers_doc.py
+	fi
 }
 
 puse() { usex $1 "" no; }

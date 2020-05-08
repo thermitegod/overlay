@@ -1,6 +1,5 @@
 # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=7
 PYTHON_COMPAT=( python3_{6,7,8} )
@@ -16,6 +15,7 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS=""
 IUSE="test"
+RESTRICT="!test? ( test )"
 
 DEPEND="
 	dev-python/APScheduler[${PYTHON_USEDEP}]
@@ -58,4 +58,3 @@ src_prepare(){
 	echo "" >| requirements.txt
 	rm flexget/components/sites/sites/hebits.py
 }
-

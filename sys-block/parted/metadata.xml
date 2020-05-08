@@ -15,6 +15,7 @@
 	Obviously, these "waste" space, but in the past, they have caught
 	potentially dangerous bugs before they would have done damage, so we think
 	it's worth it.  Also, it means we get more bug reports ;)
-	</flag>
+		</flag>
+		<flag name="e2fsprogs"> runtime support for ext* filesystems </flag>
 	</use>
 </pkgmetadata>
