@@ -8,16 +8,16 @@
 
 EAPI=7
 PYTHON_COMPAT=( python3_{6,7,8} )
+PYTHON_REQ_USE="threads(+)?"
 
 inherit distutils-r1
 if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="https://github.com/Lawouach/WebSocket-for-Python.git"
 	inherit git-r3
-	KEYWORDS=""
 else
-	inherit vcs-snapshot
 	SRC_URI="https://github.com/Lawouach/WebSocket-for-Python/archive/${PV}.tar.gz -> ${P}.tar.gz"
-	KEYWORDS="amd64 ~x86"
+	KEYWORDS="~amd64 ~arm ~x86"
+	S="${WORKDIR}/WebSocket-for-Python-${PV}"
 fi
 
 DESCRIPTION="WebSocket client and server library for Python 2 and 3 as well as PyPy"
@@ -30,15 +30,17 @@ RESTRICT="!test? ( test )"
 # doc build requires sphinxcontrib ext packages absent from portage
 
 RDEPEND=">=dev-python/greenlet-0.4.1[${PYTHON_USEDEP}]
-		>=dev-python/cython-0.19.1[${PYTHON_USEDEP}]
-		client? ( >=www-servers/tornado-3.1[${PYTHON_USEDEP}] )
-		server? ( >=dev-python/cherrypy-3.2.4[${PYTHON_USEDEP}] )"
-DEPEND="
-	test? (
+	>=dev-python/cython-0.19.1[${PYTHON_USEDEP}]
+	client? ( >=www-servers/tornado-3.1[${PYTHON_USEDEP}] )
+	server? ( >=dev-python/cherrypy-3.2.4[${PYTHON_USEDEP}] )"
+
+DEPEND="test? (
 		>=dev-python/cherrypy-3.2.4[${PYTHON_USEDEP}]
 		dev-python/unittest2[${PYTHON_USEDEP}]
 		>=dev-python/mock-1.0.1[${PYTHON_USEDEP}]
 	)"
+
+PATCHES=( "${FILESDIR}"/${PN}-0.5.1-python3.7+-compatibility.patch )
 
 python_test() {
 	# testsuite displays an issue with mock under py3 but is non fatal
