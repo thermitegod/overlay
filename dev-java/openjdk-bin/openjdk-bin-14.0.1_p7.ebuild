@@ -12,7 +12,7 @@ abi_uri() {
 }
 
 MY_PV=${PV/_p/+}
-SLOT=${MY_PV%%[.+]*}
+SLOT=14
 
 SRC_URI="
 	$(abi_uri arm)
