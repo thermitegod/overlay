@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit autotools bash-completion-r1 linux-info systemd
+inherit autotools bash-completion-r1 linux-info systemd user
 
 DESCRIPTION="Fast, dense and secure container management"
 HOMEPAGE="https://linuxcontainers.org/lxd/introduction/"
@@ -12,7 +12,7 @@ LICENSE="Apache-2.0 BSD BSD-2 LGPL-3 MIT MPL-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
 
-IUSE="+daemon +ipv6 +dnsmasq nls test tools zfs"
+IUSE="+daemon +ipv6 +dnsmasq nls test tools"
 RESTRICT="!test? ( test )"
 
 SRC_URI="https://linuxcontainers.org/downloads/${PN}/${P}.tar.gz"
@@ -51,7 +51,6 @@ RDEPEND="
 		sys-fs/squashfs-tools
 		virtual/acl
 	)
-	zfs? ( sys-fs/zfs )
 "
 
 CONFIG_CHECK="
@@ -95,13 +94,13 @@ src_prepare() {
 	sed -i 's#lib$#lib/lxd#' Makefile || die "Can't sed libco Makefile"
 
 	cd "${S}/_dist/deps/raft" || die "Can't cd to raft dir"
+
 	# Workaround for " * ACCESS DENIED:  open_wr:      /dev/zfs"
-	#sed -i 's#zfs version | cut -f 2#< /sys/module/zfs/version cut -f 1#' configure.ac || die "Can't sed configure.ac for raft"
+	addpredict /dev/zfs
+
 	eautoreconf
 
 	cd "${S}/_dist/deps/dqlite" || die "Can't cd to dqlite dir"
-
-	use zfs && addpredict /dev/zfs
 
 	eautoreconf
 
