@@ -13,7 +13,7 @@ KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~x86"
 
 LICENSE="LGPL-3"
 SLOT="0"
-IUSE="apparmor examples pam seccomp selinux +templates"
+IUSE="apparmor examples pam seccomp selinux templates"
 
 RDEPEND="
 	net-libs/gnutls
