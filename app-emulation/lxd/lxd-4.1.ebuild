@@ -3,55 +3,35 @@
 
 EAPI=7
 
-inherit autotools bash-completion-r1 linux-info systemd user
+inherit autotools bash-completion-r1 eutils linux-info systemd
 
 DESCRIPTION="Fast, dense and secure container management"
-HOMEPAGE="https://linuxcontainers.org/lxd/introduction/"
+HOMEPAGE="https://linuxcontainers.org/lxd/introduction/ https://github.com/lxc/lxd"
+SRC_URI="https://linuxcontainers.org/downloads/${PN}/${P}.tar.gz"
 
+# Needs to include licenses for all bundled programs.
 LICENSE="Apache-2.0 BSD BSD-2 LGPL-3 MIT MPL-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
+IUSE="+ipv6 nls"
 
-IUSE="+daemon +ipv6 +dnsmasq nls test tools"
-RESTRICT="!test? ( test )"
-
-SRC_URI="https://linuxcontainers.org/downloads/${PN}/${P}.tar.gz"
-
-DEPEND="
+DEPEND="app-arch/xz-utils
+	>=app-emulation/lxc-3.0.0[seccomp]
 	dev-lang/tcl
-	>=dev-lang/go-1.9.4
 	dev-libs/libuv
-	dev-libs/protobuf
-	nls? ( sys-devel/gettext )
-	test? (
-		app-misc/jq
-		net-misc/curl
-		sys-devel/gettext
-	)
-"
-
-RDEPEND="
-	daemon? (
-		app-arch/xz-utils
-		>=app-emulation/lxc-4.0.0[seccomp]
-		dev-libs/libuv
-		dev-libs/lzo
-		dev-util/xdelta:3
-		dnsmasq? (
-			net-dns/dnsmasq[dhcp,ipv6?]
-		)
-		net-firewall/ebtables
-		net-firewall/iptables[ipv6?]
-		net-libs/libnfnetlink
-		net-libs/libnsl:0=
-		net-misc/rsync[xattr]
-		sys-apps/iproute2[ipv6?]
-		sys-fs/fuse
-		sys-fs/lxcfs
-		sys-fs/squashfs-tools
-		virtual/acl
-	)
-"
+	dev-libs/lzo
+	net-dns/dnsmasq[dhcp,ipv6?]"
+RDEPEND="${DEPEND}
+	acct-group/lxd
+	net-firewall/ebtables
+	net-firewall/iptables[ipv6?]
+	sys-apps/iproute2[ipv6?]
+	sys-fs/fuse:0=
+	sys-fs/lxcfs
+	sys-fs/squashfs-tools
+	virtual/acl"
+BDEPEND="dev-lang/go
+	nls? ( sys-devel/gettext )"
 
 CONFIG_CHECK="
 	~BRIDGE
@@ -66,208 +46,159 @@ CONFIG_CHECK="
 	~NET_IPGRE
 	~NET_IPGRE_DEMUX
 	~NET_IPIP
-	~NF_NAT_MASQUERADE
+	~NF_NAT_MASQUERADE_IPV4
+	~NF_NAT_MASQUERADE_IPV6
 	~VXLAN
 "
 
-ERROR_BRIDGE="BRIDGE: needed for network commands"
-ERROR_DUMMY="DUMMY: needed for network commands"
-ERROR_IP6_NF_NAT="IP6_NF_NAT: needed for network commands"
-ERROR_IP6_NF_TARGET_MASQUERADE="IP6_NF_TARGET_MASQUERADE: needed for network commands"
-ERROR_IPV6="IPV6: needed for network commands"
-ERROR_IP_NF_NAT="IP_NF_NAT: needed for network commands"
-ERROR_IP_NF_TARGET_MASQUERADE="IP_NF_TARGET_MASQUERADE: needed for network commands"
-ERROR_MACVLAN="MACVLAN: needed for network commands"
-ERROR_NETFILTER_XT_MATCH_COMMENT="NETFILTER_XT_MATCH_COMMENT: needed for network commands"
-ERROR_NET_IPGRE="NET_IPGRE: needed for network commands"
-ERROR_NET_IPGRE_DEMUX="NET_IPGRE_DEMUX: needed for network commands"
-ERROR_NET_IPIP="NET_IPIP: needed for network commands"
-ERROR_NF_NAT_MASQUERADE="NF_NAT_MASQUERADE: needed for network commands"
-ERROR_VXLAN="VXLAN: needed for network commands"
+# To no one's surprise uses internet connection.
+RESTRICT="test"
+
+# Go magic.
+QA_PREBUILT="/usr/lib/lxd/libdqlite.so.0.0.1
+	/usr/bin/fuidshift
+	/usr/bin/lxc
+	/usr/bin/lxc-to-lxd
+	/usr/bin/lxd-agent
+	/usr/bin/lxd-benchmark
+	/usr/bin/lxd-p2c
+	/usr/sbin/lxd"
 
 EGO_PN="github.com/lxc/lxd"
+GOPATH="${S}/_dist" # this seems to reset every now and then, though
+
+common_op() {
+	local i
+	for i in dqlite raft; do
+		cd "${GOPATH}"/deps/${i} || die "failed to switch dir to ${i}"
+		"${@}"
+		cd "${S}" || die "failed to switch dir back from ${i} to ${S}"
+	done
+}
 
 src_prepare() {
-	eapply_user
+	default
 
-	cd "${S}/_dist/deps/libco" || die "Can't cd to libco dir"
-	sed -i 's#lib$#lib/lxd#' Makefile || die "Can't sed libco Makefile"
+	export GOPATH="${S}/_dist"
 
-	cd "${S}/_dist/deps/raft" || die "Can't cd to raft dir"
+	sed -i \
+		-e "s:\./configure:./configure --prefix=/usr --libdir=${EPREFIX}/usr/lib/lxd:g" \
+		-e "s:make:make ${MAKEOPTS}:g" \
+		Makefile || die
 
-	# Workaround for " * ACCESS DENIED:  open_wr:      /dev/zfs"
-	addpredict /dev/zfs
+	sed -i 's#lib$#lib/lxd#' "${GOPATH}"/deps/libco/Makefile || die
+	sed -i 's#zfs version 2>/dev/null | cut -f 2 -d - | head -1#< /sys/module/zfs/version cut -f 1#' "${GOPATH}"/deps/raft/configure.ac || die
 
-	eautoreconf
-
-	cd "${S}/_dist/deps/dqlite" || die "Can't cd to dqlite dir"
-
-	eautoreconf
-
+	common_op eautoreconf
 }
 
 src_configure() {
 	export GOPATH="${S}/_dist"
-	cd "${GOPATH}/deps/sqlite" || die "Can't cd to sqlite dir"
-	econf --enable-replication --disable-amalgamation --disable-tcl --libdir="${EPREFIX}/usr/lib/lxd"
 
-	cd "${GOPATH}/deps/raft" || die "Can't cd to raft dir"
-	econf --libdir="${EPREFIX}"/usr/lib/lxd
-
-	cd "${GOPATH}/deps/dqlite" || die "Can't cd to dqlite dir"
-	export SQLITE_CFLAGS="-I${GOPATH}/deps/sqlite"
-	export SQLITE_LIBS="${GOPATH}/deps/sqlite/.libs"
-	export RAFT_CFLAGS="-I${GOPATH}/deps/raft/include/"
-	export RAFT_LIBS="${GOPATH}/deps/raft/.libs"
 	export CO_CFLAGS="-I${GOPATH}/deps/libco/"
 	export CO_LIBS="${GOPATH}/deps/libco/"
-	PKG_CONFIG_PATH="${GOPATH}/sqlite/:${GOPATH}/libco/:${GOPATH}/raft/" econf --libdir=${EPREFIX}/usr/lib/lxd
+
+	export RAFT_CFLAGS="-I${GOPATH}/deps/raft/include/"
+	export RAFT_LIBS="${GOPATH}/deps/raft/.libs"
+
+	export SQLITE_CFLAGS="-I${GOPATH}/deps/sqlite"
+	export SQLITE_LIBS="${GOPATH}/deps/sqlite/.libs"
+
+	export PKG_CONFIG_PATH="${GOPATH}/sqlite/:${GOPATH}/libco/:${GOPATH}/raft/"
+
+	cd "${GOPATH}/deps/sqlite" || die
+	econf --enable-replication --disable-amalgamation --disable-tcl --libdir="${EPREFIX}/usr/lib/lxd"
+
+	common_op econf --libdir="${EPREFIX}"/usr/lib/lxd
 }
 
 src_compile() {
 	export GOPATH="${S}/_dist"
 
-	cd "${GOPATH}/deps/sqlite" || die "Can't cd to sqlite dir"
-	emake
+	export CGO_CFLAGS="${CGO_CFLAGS} -I${GOPATH}/deps/sqlite/ -I${GOPATH}/deps/dqlite/include/ -I${GOPATH}/deps/raft/include/ -I${GOPATH}/deps/libco/"
+	export CGO_LDFLAGS="${CGO_LDFLAGS} -L${GOPATH}/deps/sqlite/.libs/ -L${GOPATH}/deps/dqlite/.libs/ -L${GOPATH}/deps/raft/.libs -L${GOPATH}/deps/libco/ -Wl,-rpath,${EPREFIX}/usr/lib/lxd"
+	export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs:${GOPATH}/deps/libco/:${LD_LIBRARY_PATH}"
 
-	cd "${GOPATH}/deps/raft" || die "Can't cd to raft dir"
-	emake
+	local j
+	for j in sqlite raft libco; do
+		cd "${GOPATH}"/deps/${j} || die
+		emake
+	done
 
-	cd "${GOPATH}/deps/libco" || die "Can't cd to libco dir"
-	emake
+	ln -s libco.so.0.1.0 libco.so || die
 
-	ln -s libco.so.0.1.0 libco.so
-
-	cd "${GOPATH}/deps/dqlite" || die "Can't cd to dqlite dir"
+	cd "${GOPATH}/deps/dqlite" || die
 	emake CFLAGS="-I${GOPATH}/deps/sqlite -I${GOPATH}/deps/raft/include" LDFLAGS="-L${GOPATH}/deps/sqlite -L${GOPATH}/deps/raft"
 
-	# We don't use the Makefile here because it builds targets with the
-	# assumption that `pwd` is in a deep gopath namespace, which we're not.
-	# It's simpler to manually call "go install" than patching the Makefile.
-	cd "${S}"
-	go install -v -x ${EGO_PN}/lxc || die "Failed to build the client"
+	cd "${S}" || die
 
-	if use daemon; then
+	for k in fuidshift lxd-agent lxd-benchmark lxd-p2c lxc lxc-to-lxd; do
+		go install -v -x ${EGO_PN}/${k} || die "failed compiling ${k}"
+	done
 
-		# LXD depends on a patched, bundled sqlite with replication
-		# capabilities.
-		export CGO_CFLAGS="${CGO_CFLAGS} -I${GOPATH}/deps/sqlite/ -I${GOPATH}/deps/dqlite/include/ -I${GOPATH}/deps/raft/include/ -I${GOPATH}/deps/libco/"
-		export CGO_LDFLAGS="${CGO_LDFLAGS} -L${GOPATH}/deps/sqlite/.libs/ -L${GOPATH}/deps/dqlite/.libs/ -L${GOPATH}/deps/raft/.libs -L${GOPATH}/deps/libco/ -Wl,-rpath,${EPREFIX}/usr/lib/lxd"
-		export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs:${GOPATH}/deps/libco/:${LD_LIBRARY_PATH}"
-
-		go install -v -x -tags libsqlite3 ${EGO_PN}/lxd || die "Failed to build the daemon"
-	fi
-
-	if use tools; then
-		go install -v -x ${EGO_PN}/fuidshift || die "Failed to build fuidshift"
-		go install -v -x ${EGO_PN}/lxc-to-lxd || die "Failed to build lxc-to-lxd"
-		go install -v -x ${EGO_PN}/lxd-benchmark || die "Failed to build lxd-benchmark"
-		go install -v -x ${EGO_PN}/lxd-p2c || die "Failed to build lxd-p2c"
-	fi
+	go install -v -x -tags libsqlite3 ${EGO_PN}/lxd || die "Failed to build the daemon"
 
 	use nls && emake build-mo
 }
 
 src_test() {
-	if use daemon; then
-		export GOPATH="${S}/_dist"
-		# This is mostly a copy/paste from the Makefile's "check" rule, but
-		# patching the Makefile to work in a non "fully-qualified" go namespace
-		# was more complicated than this modest copy/paste.
-		# Also: sorry, for now a network connection is needed to run tests.
-		# Will properly bundle test dependencies later.
-		go get -v -x github.com/rogpeppe/godeps
-		go get -v -x github.com/remyoudompheng/go-misc/deadcode
-		go get -v -x github.com/golang/lint/golint
-		go test -v ${EGO_PN}/lxd
-	else
-		einfo "No tests to run for client-only builds"
-	fi
+	export GOPATH="${S}/_dist"
+
+	# This is mostly a copy/paste from the Makefile's "check" rule, but
+	# patching the Makefile to work in a non "fully-qualified" go namespace
+	# was more complicated than this modest copy/paste.
+	# Also: sorry, for now a network connection is needed to run tests.
+	# Will properly bundle test dependencies later.
+	go get -v -x github.com/rogpeppe/godeps || die
+	go get -v -x github.com/remyoudompheng/go-misc/deadcode || die
+	go get -v -x github.com/golang/lint/golint || die
+	go test -v ${EGO_PN}/lxd || die
 }
 
 src_install() {
 	local bindir="_dist/bin"
-	dobin ${bindir}/lxc
-	if use daemon; then
+	export GOPATH="${S}/_dist"
 
-		export GOPATH="${S}/_dist"
-		cd "${GOPATH}/deps/sqlite" || die "Can't cd to sqlite dir"
+	dosbin ${bindir}/lxd
+
+	for l in fuidshift lxd-agent lxd-benchmark lxd-p2c lxc lxc-to-lxd; do
+		dobin ${bindir}/${l}
+	done
+
+	for m in dqlite libco raft sqlite; do
+		cd "${GOPATH}"/deps/${m} || die "failed switching into ${GOPATH}/${m}"
 		emake DESTDIR="${D}" install
+	done
 
-		cd "${GOPATH}/deps/raft" || die "Can't cd to raft dir"
-		emake DESTDIR="${D}" install
+	cd "${S}" || die
 
-		cd "${GOPATH}/deps/libco" || die "Can't cd to libco dir"
-		emake DESTDIR="${D}" install
-
-		cd "${GOPATH}/deps/dqlite" || die "Can't cd to dqlite dir"
-		emake DESTDIR="${D}" install
-
-		# Must only install libs
-		rm "${D}/usr/bin/sqlite3" || die "Can't remove custom sqlite3 binary"
-		rm -r "${D}/usr/include" || die "Can't remove include directory"
-
-		cd "${S}" || die "Can't cd to \${S}"
-		dosbin ${bindir}/lxd
-	fi
-
-	if use tools; then
-		dobin ${bindir}/fuidshift
-		dobin ${bindir}/lxc-to-lxd
-		dobin ${bindir}/lxd-benchmark
-		dobin ${bindir}/lxd-p2c
-	fi
-
-	if use nls; then
-		domo po/*.mo
-	fi
-
-	if use daemon; then
-		newinitd "${FILESDIR}"/${PN}.initd lxd
-		newconfd "${FILESDIR}"/${PN}.confd lxd
-
-		systemd_newunit "${FILESDIR}"/${PN}.service ${PN}.service
-	fi
+	# We only need libraries, and we don't want anything to link against these.
+	rm "${ED}"/usr/bin/sqlite3 || die
+	rm -r "${ED}"/usr/include || die
+	rm -r "${ED}"/usr/lib/lxd/*.a || die
+	rm -r "${ED}"/usr/lib/lxd/pkgconfig || die
 
 	newbashcomp scripts/bash/lxd-client lxc
 
+	newconfd "${FILESDIR}"/${PN}-4.0.0.confd lxd
+	newinitd "${FILESDIR}"/${PN}-4.0.0.initd lxd
+
+	systemd_newunit "${FILESDIR}"/${PN}.service ${PN}.service
+
 	dodoc AUTHORS doc/*
+	use nls && domo po/*.mo
 }
 
 pkg_postinst() {
 	elog
 	elog "Consult https://wiki.gentoo.org/wiki/LXD for more information,"
 	elog "including a Quick Start."
-
-	# The messaging below only applies to daemon installs
-	use daemon || return 0
-
-	# The control socket will be owned by (and writeable by) this group.
-	enewgroup lxd
-
-	# Ubuntu also defines an lxd user but it appears unused (the daemon
-	# must run as root)
-
 	elog
-	elog "Though not strictly required, some features are enabled at run-time"
-	elog "when the relevant helper programs are detected:"
-	elog "- sys-apps/apparmor"
-	elog "- sys-fs/btrfs-progs"
-	elog "- sys-fs/lvm2"
-	elog "- sys-fs/zfs"
-	elog "- sys-process/criu"
-	elog
-	elog "Since these features can't be disabled at build-time they are"
-	elog "not USE-conditional."
+	elog "Optional features:"
+	optfeature "apparmor support" app-emulation/lxc[apparmor]
+	optfeature "btrfs storage backend" sys-fs/btrfs-progs
+	optfeature "lvm2 storage backend" sys-fs/lvm2
+	optfeature "zfs storage backend" sys-fs/zfs
 	elog
 	elog "Be sure to add your local user to the lxd group."
-	elog
-	elog "Networks with bridge.mode=fan are unsupported due to requiring"
-	elog "a patched kernel and iproute2."
 }
-
-# TODO:
-# - man page, I don't see cobra generating it
-# - maybe implement LXD_CLUSTER_UPDATE per
-#     https://discuss.linuxcontainers.org/t/lxd-3-5-has-been-released/2656
-#     EM I'm not convinced it's a good design.
