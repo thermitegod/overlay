@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-PYTHON_COMPAT=( python3_{6,7,8} )
+PYTHON_COMPAT=( python3_{6,7,8,9} )
 
 inherit distutils-r1
 
@@ -19,11 +19,11 @@ RESTRICT="!test? ( test )"
 RDEPEND="dev-python/pytz[${PYTHON_USEDEP}]
 	dev-python/setuptools[${PYTHON_USEDEP}]
 	>=dev-python/six-1.4.0[${PYTHON_USEDEP}]
-	>=dev-python/tzlocal-1.2[${PYTHON_USEDEP}]
-	"
+	>=dev-python/tzlocal-1.2[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}
 	test? (
 		dev-python/pytest[${PYTHON_USEDEP}]
+		www-servers/tornado[${PYTHON_USEDEP}]
 	)"
 
 # Tests that are known to fail (some may be triggered by network-sandbox).
