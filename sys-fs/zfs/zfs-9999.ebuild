@@ -6,13 +6,13 @@ EAPI=7
 DISTUTILS_OPTIONAL=1
 PYTHON_COMPAT=( python3_{6,7,8} )
 
-inherit bash-completion-r1 flag-o-matic linux-info distutils-r1 systemd toolchain-funcs udev usr-ldscript
+inherit autotools bash-completion-r1 flag-o-matic linux-info distutils-r1 systemd toolchain-funcs udev usr-ldscript
 
 DESCRIPTION="Userland utilities for ZFS Linux kernel module"
 HOMEPAGE="https://github.com/openzfs/zfs"
 
 if [[ ${PV} == "9999" ]] ; then
-	inherit autotools git-r3 linux-mod
+	inherit git-r3 linux-mod
 	EGIT_REPO_URI="https://github.com/openzfs/zfs.git"
 else
 	SRC_URI="https://github.com/openzfs/${PN}/releases/download/${P}/${P}.tar.gz"
@@ -110,7 +110,7 @@ src_prepare() {
 
 	# prevent errors showing up on zfs-mount stop, #647688
 	# openrc will unmount all filesystems anyway.
-	sed -i "/^ZFS_UNMOUNT=/ s/yes/no/" etc/default/zfs.in || die
+	sed -i "/^ZFS_UNMOUNT=/ s/yes/no/" "etc/default/zfs.in" || die
 }
 
 src_configure() {
@@ -183,12 +183,6 @@ pkg_postinst() {
 			elog "the following packages known to provide one and tested on regular basis:"
 			elog "  sys-kernel/dracut"
 			elog "  sys-kernel/genkernel"
-		fi
-
-		if has_version "<=sys-kernel/genkernel-3.5.3.3"; then
-			einfo "genkernel version 3.5.3.3 and earlier does NOT support"
-			einfo " unlocking pools with native zfs encryption enabled at boot"
-			einfo " use dracut or >=genkernel-4 if you requre this functionality"
 		fi
 	fi
 
