@@ -27,7 +27,7 @@ DEPEND="
 	dev-python/flask-compress[${PYTHON_USEDEP}]
 	dev-python/flask-cors[${PYTHON_USEDEP}]
 	dev-python/flask-login[${PYTHON_USEDEP}]
-	dev-python/flask-restplus[${PYTHON_USEDEP}]
+	dev-python/flask-restx[${PYTHON_USEDEP}]
 	dev-python/guessit[${PYTHON_USEDEP}]
 	dev-python/html5lib[${PYTHON_USEDEP}]
 	dev-python/jaraco-collections[${PYTHON_USEDEP}]
