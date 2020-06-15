@@ -13,11 +13,14 @@ EGIT_REPO_URI="https://github.com/thermitegod/spacefm"
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
 KEYWORDS=""
-IUSE="deprecated-hw +gtk2 gtk3 +nls +startup-notification"
+IUSE="deprecated +gtk2 gtk3 +nls +startup-notification"
+
+CONFIG_CHECK="~INOTIFY_USER"
 
 RDEPEND="dev-libs/glib:2
 	dev-util/desktop-file-utils
 	>=dev-util/meson-0.49.0
+	dev-libs/libbsd
 	dev-vcs/git
 	media-video/ffmpegthumbnailer
 	>=virtual/udev-143
@@ -38,16 +41,13 @@ DEPEND="${RDEPEND}
 	"
 
 src_configure() {
-	meson_src_configure
-#	local emesonargs=()
+	meson_src_configure \
+		$(meson_use startup-notification sn) \
+		$(meson_use nls nls) \
+		$(meson_use deprecated deprecated-hw) \
+		$(meson_use gtk2 gtk2) \
+		$(meson_use gtk3 gtk3)
 
-#	econf \
-#		--htmldir=/usr/share/doc/${PF}/html \
-#		$(use_enable deprecated-hw) \
-#		$(use_enable nls) \
-#		$(use_enable startup-notification) \
-#		--disable-pixmaps \
-#		$(use_with gtk3 gtk3 "yes")
 }
 
 src_compile() {
@@ -58,6 +58,7 @@ src_install() {
 	meson_src_install
 	einstalldocs
 	doman doc/*.1
+	doman doc/*.7
 }
 
 pkg_postinst() {
@@ -71,11 +72,8 @@ pkg_postinst() {
 	elog "  sys-apps/pmount"
 	elog "  sys-fs/udisks:0"
 	elog "  sys-fs/udisks:2"
-	elog "To support ftp/nfs/smb/ssh URLs in the path bar you need:"
+	elog "To support ftp/nfs/smb/ssh URLs in the path bar you may need:"
 	elog "  sys-apps/udevil"
-	elog "To perform as root functionality you need one of the following:"
-	elog "  x11-misc/ktsuss"
-	elog "  kde-plasma/kde-cli-tools[kdesu]"
 	elog "Other optional dependencies:"
 	elog "  sys-apps/dbus"
 	elog "  sys-process/lsof (device processes)"

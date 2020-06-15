@@ -14,7 +14,7 @@
 		<remote-id type="github">ignorantguru/spacefm</remote-id>
 	</upstream>
 	<use>
-		<flag name="deprecated-hw">Support for dvd, audiocd, firewire</flag>
+		<flag name="deprecated">Support for dvd, audiocd, firewire, and floppy disks</flag>
 		<flag name="gtk2">Support GTK+ 2.x instead of GTK+ 3.x</flag>
 		<flag name="gtk3">Support GTK+ 3.x instead of GTK+ 2.x</flag>
 	</use>
