@@ -43,7 +43,7 @@ DEPEND="
 	dev-python/setuptools[${PYTHON_USEDEP}]
 	dev-python/sqlalchemy[${PYTHON_USEDEP}]
 	dev-python/terminaltables[${PYTHON_USEDEP}]
-	<dev-python/werkzeug-1.0.0[${PYTHON_USEDEP}]
+	dev-python/werkzeug[${PYTHON_USEDEP}]
 	dev-python/zxcvbn[${PYTHON_USEDEP}]
 "
 DEPEND+=" test? ( dev-python/nose[${PYTHON_USEDEP}] )"
