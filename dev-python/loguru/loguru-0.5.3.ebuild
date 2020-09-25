@@ -15,10 +15,8 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc64 ~x86"
 
-RDEPEND="
-	$(python_gen_cond_dep 'dev-python/aiocontextvars[${PYTHON_USEDEP}]' 'python3_6')
-	>=dev-python/colorama-0.3.4[${PYTHON_USEDEP}]
-"
+RDEPEND="$(python_gen_cond_dep 'dev-python/aiocontextvars[${PYTHON_USEDEP}]' 'python3_6')"
+BDEPEND="test? ( >=dev-python/colorama-0.3.4[${PYTHON_USEDEP}] )"
 # filesystem buffering tests may fail
 # on tmpfs with 64k PAGESZ, but pass fine on ext4
 distutils_enable_tests pytest
