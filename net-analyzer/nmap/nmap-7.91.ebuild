@@ -2,16 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
+inherit autotools flag-o-matic toolchain-funcs
 
-MY_P=${P/_beta/BETA}
-inherit autotools desktop flag-o-matic toolchain-funcs user
-
-DESCRIPTION="A utility for network discovery and security auditing"
+DESCRIPTION="Network exploration tool and security / port scanner"
 HOMEPAGE="https://nmap.org/"
-SRC_URI="
-	https://nmap.org/dist/${MY_P}.tar.bz2
-	https://dev.gentoo.org/~jer/nmap-logo-64.png
-"
+SRC_URI="https://nmap.org/dist/${P}.tar.bz2"
 
 LICENSE="NPSL"
 SLOT="0"
@@ -45,9 +40,8 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-7.25-libpcre.patch
 	"${FILESDIR}"/${PN}-7.31-libnl.patch
 	"${FILESDIR}"/${PN}-7.80-ac-config-subdirs.patch
-	"${FILESDIR}"/${PN}-7.90-no-FORTIFY_SOURCE.patch
+	"${FILESDIR}"/${PN}-7.91-no-FORTIFY_SOURCE.patch
 )
-S="${WORKDIR}/${MY_P}"
 
 src_prepare() {
 	rm -r liblinear/ libpcap/ libpcre/ libssh2/ libz/ || die
@@ -59,11 +53,6 @@ src_prepare() {
 	sed -i \
 		-e '/^ALL_LINGUAS =/{s|$| id|g;s|jp|ja|g}' \
 		Makefile.in || die
-	# Fix desktop files wrt bug #432714
-	sed -i \
-		-e 's|^Categories=.*|Categories=Network;System;Security;|g' \
-		zenmap/install_scripts/unix/zenmap-root.desktop \
-		zenmap/install_scripts/unix/zenmap.desktop || die
 
 	cp libdnet-stripped/include/config.h.in{,.nmap-orig} || die
 
@@ -82,18 +71,16 @@ src_configure() {
 		$(use_enable ipv6) \
 		$(use_with libssh2) \
 		$(use_with ncat) \
-		--without-ndiff \
 		$(use_with nping) \
 		$(use_with ssl openssl) \
-		--without-zenmap \
 		$(usex libssh2 --with-zlib) \
-		$(usex nse --with-zlib) \
 		$(usex nse --with-liblua=$(usex system-lua /usr included '' '') --without-liblua) \
+		$(usex nse --with-zlib) \
 		--cache-file="${S}"/config.cache \
 		--with-libdnet=included \
-		--with-pcre=/usr
-	#	Commented out because configure does weird things
-	#	--with-liblinear=/usr \
+		--with-pcre=/usr \
+		--without-ndiff \
+		--without-zenmap
 }
 
 src_compile() {
