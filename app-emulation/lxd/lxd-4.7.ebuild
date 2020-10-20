@@ -26,7 +26,7 @@ RDEPEND="${DEPEND}
 	net-firewall/ebtables
 	net-firewall/iptables[ipv6?]
 	sys-apps/iproute2[ipv6?]
-	sys-fs/fuse:0=
+	sys-fs/fuse:3=
 	sys-fs/lxcfs
 	sys-fs/squashfs-tools
 	virtual/acl"
