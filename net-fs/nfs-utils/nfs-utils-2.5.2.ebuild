@@ -63,7 +63,7 @@ BDEPEND="
 "
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.4.2-no-werror.patch
+	"${FILESDIR}"/${PN}-2.5.2-no-werror.patch
 	"${FILESDIR}"/${PN}-2.4.2-Ensure-consistent-struct-stat.patch
 )
 
