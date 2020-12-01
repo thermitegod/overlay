@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
+
 PYTHON_COMPAT=( python3_{6,7,8,9} )
 inherit python-any-r1 qt5-build
 
@@ -24,7 +25,7 @@ DEPEND="
 	widgets? ( ~dev-qt/qtwidgets-${PV}[gles2-only=] )
 "
 RDEPEND="${DEPEND}
-	!<dev-qt/qtquickcontrols-5.7:5
+	dev-qt/qtchooser
 "
 
 PATCHES=(
