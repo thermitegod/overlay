@@ -20,15 +20,17 @@ fi
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="+7z +rar"
+IUSE=""
 
 RDEPEND="${DEPEND}
-	virtual/jpeg
+	app-arch/p7zip
+	app-arch/unrar
 	dev-python/pillow[${PYTHON_USEDEP}]
+	dev-python/xxhash[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
+	dev-python/urllib3[${PYTHON_USEDEP}]
+	virtual/jpeg
 	x11-libs/gdk-pixbuf
-	7z? ( app-arch/p7zip )
-	rar? ( app-arch/unrar )
 	!media-gfx/comix
 	!media-gfx/mcomix"
 
