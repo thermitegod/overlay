@@ -59,7 +59,6 @@ REQUIRED_USE="
 RESTRICT="!test? ( test )"
 
 COMMON_DEPEND="
-	!!app-shells/mpv-bash-completion
 	>=media-video/ffmpeg-4.0:0=[encode,threads,vaapi?,vdpau?]
 	alsa? ( >=media-libs/alsa-lib-1.0.18 )
 	archive? ( >=app-arch/libarchive-3.4.0:= )
@@ -81,7 +80,7 @@ COMMON_DEPEND="
 	javascript? ( >=dev-lang/mujs-1.0.0 )
 	jpeg? ( virtual/jpeg:0 )
 	lcms? ( >=media-libs/lcms-2.6:2 )
-	>=media-libs/libass-0.12.1:=[fontconfig,harfbuzz]
+	>=media-libs/libass-0.12.1:=[fontconfig,harfbuzz(+)]
 	virtual/ttf-fonts
 	libcaca? ( >=media-libs/libcaca-0.99_beta18 )
 	lua? (
