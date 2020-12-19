@@ -25,8 +25,8 @@ IUSE=""
 RDEPEND="${DEPEND}
 	app-arch/p7zip
 	app-arch/unrar
-	dev-python/pillow[${PYTHON_USEDEP}]
-	dev-python/xxhash[${PYTHON_USEDEP}]
+	>=dev-python/pillow-6.0.0[${PYTHON_USEDEP}]
+	>=dev-python/xxhash-0.8.0[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
 	dev-python/urllib3[${PYTHON_USEDEP}]
 	virtual/jpeg
