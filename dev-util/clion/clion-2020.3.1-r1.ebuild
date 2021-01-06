@@ -1,4 +1,4 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -7,7 +7,7 @@ inherit desktop wrapper
 
 DESCRIPTION="A complete toolset for C and C++ development"
 HOMEPAGE="https://www.jetbrains.com/clion"
-SRC_URI="https://download.jetbrains.com/cpp/CLion-${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://download.jetbrains.com/cpp/CLion-${PV}.tar.gz"
 
 LICENSE="|| ( IDEA IDEA_Academic IDEA_Classroom IDEA_OpenSource IDEA_Personal )
 	Apache-1.1 Apache-2.0 BSD BSD-2 CC0-1.0 CDDL-1.1 CPL-0.5 CPL-1.0
@@ -16,14 +16,32 @@ LICENSE="|| ( IDEA IDEA_Academic IDEA_Classroom IDEA_OpenSource IDEA_Personal )
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 RESTRICT="bindist mirror splitdebug"
-IUSE="custom-jdk"
+
+BDEPEND="dev-util/patchelf"
 
 # RDEPENDS may cause false positives in repoman.
 # clion requires cmake and gdb at runtime to build and debug C/C++ projects
 RDEPEND="
+	app-accessibility/at-spi2-atk
+	app-accessibility/at-spi2-core
+	dev-libs/atk
+	dev-libs/nss
 	dev-util/cmake
+	media-libs/alsa-lib
+	media-libs/freetype
+	media-libs/mesa
+	net-print/cups
 	sys-devel/gdb
-	!custom-jdk? ( virtual/jdk )"
+	x11-libs/libdrm
+	x11-libs/libXcomposite
+	x11-libs/libXcursor
+	x11-libs/libXdamage
+	x11-libs/libXi
+	x11-libs/libXScrnSaver
+	x11-libs/libXrandr
+	x11-libs/libXtst
+	x11-libs/libXxf86vm
+	x11-libs/pango"
 
 QA_PREBUILT="opt/${P}/*"
 
@@ -35,15 +53,22 @@ src_prepare() {
 		bin/lldb/linux
 		bin/cmake
 		license/CMake*
+		lib/pty4j-native/linux/aarch64
+		lib/pty4j-native/linux/mips64el
 		lib/pty4j-native/linux/ppc64le
 	)
 
 	use amd64 || remove_me+=( bin/fsnotifier64 lib/pty4j-native/linux/x86_64)
 	use x86 || remove_me+=( bin/fsnotifier lib/pty4j-native/linux/x86)
 
-	use custom-jdk || remove_me+=( jbr )
-
 	rm -rv "${remove_me[@]}" || die
+
+	for file in "jbr/lib/"/{libjcef.so,jcef_helper}
+	do
+		if [[ -f "${file}" ]]; then
+			patchelf --set-rpath '$ORIGIN' ${file} || die
+		fi
+	done
 }
 
 src_install() {
@@ -63,10 +88,10 @@ src_install() {
 		fperms 755 "${dir}"/bin/fsnotifier
 	fi
 
-	if use custom-jdk; then
-		if [[ -d jbr ]]; then
+	if [[ -d jbr ]]; then
 		fperms 755 "${dir}"/jbr/bin/{jaotc,java,javac,jdb,jjs,jrunscript,keytool,pack200,rmid,rmiregistry,serialver,unpack200}
-		fi
+		# Fix #763582
+		fperms 755 "${dir}"/jbr/lib/{chrome-sandbox,jcef_helper,jexec,jspawnhelper}
 	fi
 
 	make_wrapper "${PN}" "${dir}/bin/${PN}.sh"
