@@ -28,6 +28,7 @@ RDEPEND="${DEPEND}
 	>=dev-python/pillow-6.0.0[${PYTHON_USEDEP}]
 	>=dev-python/xxhash-0.8.0[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
+	dev-python/pyyaml[${PYTHON_USEDEP}]
 	virtual/jpeg
 	x11-libs/gdk-pixbuf
 	!media-gfx/comix
