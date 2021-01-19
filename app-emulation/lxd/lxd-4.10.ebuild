@@ -16,7 +16,7 @@ KEYWORDS="~amd64"
 IUSE="+ipv6 nls"
 
 DEPEND="app-arch/xz-utils
-	>=app-emulation/lxc-3.0.0[seccomp]
+	>=app-emulation/lxc-3.0.0
 	dev-lang/tcl
 	dev-libs/libuv
 	dev-libs/lzo
