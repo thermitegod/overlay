@@ -9,6 +9,8 @@ RUBY_FAKEGEM_DOCDIR="doc"
 
 RUBY_FAKEGEM_GEMSPEC="json.gemspec"
 
+RUBY_FAKEGEM_EXTENSIONS=(ext/json/ext/parser/extconf.rb ext/json/ext/generator/extconf.rb)
+
 inherit multilib ruby-fakegem
 
 DESCRIPTION="A JSON implementation as a Ruby extension"
@@ -46,22 +48,15 @@ all_ruby_prepare() {
 	sed -i -e '/gem/ s:^:#:' tests/test_helper.rb || die
 }
 
-each_ruby_configure() {
-	for ext in parser generator ; do
-		${RUBY} -Cext/json/ext/${ext} extconf.rb || die
-	done
-}
-
-each_ruby_compile() {
-	for ext in parser generator ; do
-		emake V=1 -Cext/json/ext/${ext}
-		cp ext/json/ext/${ext}/${ext}$(get_modname) ext/json/ext/ || die
-	done
-}
+#each_ruby_compile() {
+#	for ext in parser generator ; do
+#		cp ext/json/ext/${ext}/${ext}$(get_modname) ext/json/ext/ || die
+#	done
+#}
 
 each_ruby_install() {
 	each_fakegem_install
 
-	ruby_fakegem_newins ext/json/ext/generator$(get_modname) lib/json/ext/generator$(get_modname)
-	ruby_fakegem_newins ext/json/ext/parser$(get_modname) lib/json/ext/parser$(get_modname)
+	#ruby_fakegem_newins ext/json/ext/generator$(get_modname) lib/json/ext/generator$(get_modname)
+	#ruby_fakegem_newins ext/json/ext/parser$(get_modname) lib/json/ext/parser$(get_modname)
 }
