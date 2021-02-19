@@ -1,4 +1,4 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
-IUSE="deprecated +gtk2 gtk3 +nls +startup-notification"
+IUSE="deprecated +gtk2 gtk3 +nls +startup-notification +xxhash"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
@@ -36,6 +36,7 @@ RDEPEND="dev-libs/glib:2
 	x11-libs/pango
 	x11-libs/libX11
 	x11-misc/shared-mime-info
+	xxhash? ( dev-libs/xxhash )
 	gtk2? ( gtk3? ( x11-libs/gtk+:3 ) !gtk3? ( x11-libs/gtk+:2 ) )
 	!gtk2? ( x11-libs/gtk+:3 )
 	startup-notification? ( x11-libs/startup-notification )
@@ -52,7 +53,8 @@ src_configure() {
 		$(meson_use nls nls) \
 		$(meson_use deprecated deprecated-hw) \
 		$(meson_use gtk2 gtk2) \
-		$(meson_use gtk3 gtk3)
+		$(meson_use gtk3 gtk3) \
+		$(meson_use xxhash xxhash)
 
 }
 
