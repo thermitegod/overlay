@@ -39,6 +39,7 @@ RDEPEND="dev-libs/glib:2
 	xxhash? ( dev-libs/xxhash )
 	x11-libs/gtk+:3
 	startup-notification? ( x11-libs/startup-notification )
+	xfce-base/exo
 	"
 DEPEND="${RDEPEND}
 	dev-util/intltool
