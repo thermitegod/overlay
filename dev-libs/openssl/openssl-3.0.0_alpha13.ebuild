@@ -18,11 +18,7 @@ MY_P=${P/_/-}
 
 DESCRIPTION="full-strength general purpose cryptography library (including SSL and TLS)"
 HOMEPAGE="https://www.openssl.org/"
-SRC_URI="mirror://openssl/source/${MY_P}.tar.gz
-	bindist? (
-		mirror://gentoo/${BINDIST_PATCH_SET}
-		https://dev.gentoo.org/~whissi/dist/openssl/${BINDIST_PATCH_SET}
-	)"
+SRC_URI="mirror://openssl/source/${MY_P}.tar.gz"
 
 LICENSE="openssl"
 SLOT="0/3.0" # .so version of libssl/libcrypto
