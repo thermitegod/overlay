@@ -11,10 +11,12 @@ SRC_URI="https://github.com/${PN}-ng/${PN}-ng/archive/${PV}.tar.gz -> ${P}.tar.g
 
 LICENSE="ZLIB"
 SLOT="0"
-#KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~x86"
 
 CPU_USE=( cpu_flags_{x86_{avx2,sse2,ssse3,sse4a,pclmul},arm_{crc32,neon},ppc_vsx2} )
 IUSE="compat ${CPU_USE[@]} test"
+
+S="${WORKDIR}/${PN}-ng-${PV}"
 
 RESTRICT="!test? ( test )"
 
