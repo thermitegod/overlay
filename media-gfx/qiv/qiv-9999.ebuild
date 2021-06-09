@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit desktop toolchain-funcs vcs-snapshot xdg git-r3
+inherit desktop xdg-utils meson git-r3
 
 DESCRIPTION="Quick Image Viewer"
 HOMEPAGE="https://github.com/thermitegod/neoqiv"
@@ -15,6 +15,7 @@ KEYWORDS=""
 IUSE="exif lcms magic"
 
 RDEPEND="
+	>=dev-util/meson-0.49.0
 	media-libs/imlib2[X]
 	>=x11-libs/gtk+-2.12:2
 	exif? ( media-libs/libexif )
@@ -24,36 +25,22 @@ RDEPEND="
 		virtual/jpeg:0
 	)
 	magic? ( sys-apps/file )"
+
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
-src_prepare() {
-	default
-
-	sed -i \
-		-e 's:$(CC) $(CFLAGS):$(CC) $(LDFLAGS) $(CFLAGS):' \
-		Makefile || die
-
-	if ! use exif ; then
-		sed -i 's/^EXIF =/#\0/' Makefile || die
-	fi
-
-	if ! use lcms ; then
-		sed -i 's/^LCMS =/#\0/' Makefile || die
-	fi
-
-	if ! use magic ; then
-		sed -i 's/^MAGIC =/#\0/' Makefile || die
-	fi
-}
-
-src_compile() {
-	emake CC="$(tc-getCC)" CFLAGS="${CFLAGS}"
+src_configure() {
+	meson_src_configure \
+		$(meson_use magic magic) \
+		$(meson_use lcms lcms) \
+		$(meson_use exif exif)
 }
 
 src_install() {
-	dobin qiv
-	doman qiv.1
+	meson_src_install
+
+	# dobin build/qiv
+	doman man/qiv.1
 	dodoc Changelog contrib/qiv-command.example README README.TODO
 
 	domenu qiv.desktop
