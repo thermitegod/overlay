@@ -1,4 +1,4 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -25,6 +25,7 @@ IUSE=""
 RDEPEND="${DEPEND}
 	app-arch/p7zip
 	app-arch/unrar
+	dev-python/urllib3[${PYTHON_USEDEP}]
 	>=dev-python/pillow-6.0.0[${PYTHON_USEDEP}]
 	>=dev-python/xxhash-0.8.0[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
