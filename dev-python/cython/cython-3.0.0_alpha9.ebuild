@@ -8,7 +8,7 @@ PYTHON_REQ_USE="threads(+)"
 
 inherit distutils-r1 toolchain-funcs elisp-common
 
-MY_V="3.0.0a8"
+MY_V="3.0.0a9"
 
 DESCRIPTION="A Python to C compiler"
 HOMEPAGE="https://cython.org https://pypi.org/project/Cython/
@@ -19,7 +19,7 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
 IUSE="emacs test"
-RESTRICT="!test? ( test )"
+RESTRICT="!test? ( test ) mirror"
 
 S="${WORKDIR}/${PN}-${MY_V}"
 
