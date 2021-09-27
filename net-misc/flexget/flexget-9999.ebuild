@@ -19,7 +19,7 @@ RESTRICT="!test? ( test )"
 
 DEPEND="
 	dev-python/APScheduler[${PYTHON_USEDEP}]
-	dev-python/beautifulsoup:4[${PYTHON_USEDEP}]
+	dev-python/beautifulsoup4[${PYTHON_USEDEP}]
 	dev-python/cherrypy[${PYTHON_USEDEP}]
 	dev-python/colorclass[${PYTHON_USEDEP}]
 	dev-python/feedparser[${PYTHON_USEDEP}]
