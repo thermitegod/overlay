@@ -90,6 +90,13 @@ src_prepare() {
 	sed -i \
 		-e "s:/usr/lib/qemu/virtfs-proxy-helper:/usr/libexec/virtfs-proxy-helper:g" \
 		lxd/device/disk.go || die "Failed to fix virtfs-proxy-helper path."
+
+	cp "${FILESDIR}"/lxd-4.0.7-r1.service "${T}"/lxd.service || die
+	if use apparmor; then
+		sed -i \
+			'/^EnvironmentFile=.*/a ExecStartPre=\/usr\/libexec\/lxc\/lxc-apparmor-load' \
+			"${T}"/lxd.service || die
+	fi
 }
 
 src_configure() { :; }
@@ -149,11 +156,7 @@ src_install() {
 	newconfd "${FILESDIR}"/lxd-4.0.0.confd lxd
 	newinitd "${FILESDIR}"/lxd-4.0.0.initd lxd
 
-	if use apparmor; then
-		systemd_newunit "${FILESDIR}"/lxd-4.0.0_apparmor.service lxd.service
-	else
-		systemd_newunit "${FILESDIR}"/lxd-4.0.0.service lxd.service
-	fi
+	systemd_dounit "${T}"/lxd.service
 
 	systemd_newunit "${FILESDIR}"/lxd-containers-4.0.0.service lxd-containers.service
 	systemd_newunit "${FILESDIR}"/lxd-4.0.0.socket lxd.socket
