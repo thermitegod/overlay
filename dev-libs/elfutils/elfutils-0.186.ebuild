@@ -6,7 +6,7 @@ EAPI=7
 inherit flag-o-matic multilib-minimal
 
 DESCRIPTION="Libraries/utilities to handle ELF objects (drop in replacement for libelf)"
-HOMEPAGE="http://elfutils.org/"
+HOMEPAGE="https://elfutils.org/"
 SRC_URI="https://sourceware.org/elfutils/ftp/${PV}/${P}.tar.bz2"
 
 LICENSE="|| ( GPL-2+ LGPL-3+ ) utils? ( GPL-3+ )"
@@ -18,6 +18,12 @@ RDEPEND="
 	bzip2? ( >=app-arch/bzip2-1.0.6-r4[static-libs?,${MULTILIB_USEDEP}] )
 	lzma? ( >=app-arch/xz-utils-5.0.5-r1[static-libs?,${MULTILIB_USEDEP}] )
 	zstd? ( app-arch/zstd:=[static-libs?,${MULTILIB_USEDEP}] )
+	elibc_musl? (
+		dev-libs/libbsd
+		sys-libs/argp-standalone
+		sys-libs/fts-standalone
+		sys-libs/obstack-standalone
+	)
 	!dev-libs/libelf
 "
 DEPEND="${RDEPEND}
@@ -38,9 +44,21 @@ PATCHES=(
 src_prepare() {
 	default
 
+	if use elibc_musl; then
+		mkdir -p "${T}"/musl || die
+		cp -rv "${FILESDIR}"/musl/*.patch "${T}"/musl || die
+
+		# Delete patches upstreamed in 0.186
+		rm "${T}/musl/${PN}-0.185-error-h.patch" || die
+		rm "${T}/musl/${PN}-0.185-strndupa.patch" || die
+
+		eapply "${T}"/musl/
+	fi
+
 	if ! use static-libs; then
 		sed -i -e '/^lib_LIBRARIES/s:=.*:=:' -e '/^%.os/s:%.o$::' lib{asm,dw,elf}/Makefile.in || die
 	fi
+
 	# https://sourceware.org/PR23914
 	sed -i 's:-Werror::' */Makefile.in || die
 }
