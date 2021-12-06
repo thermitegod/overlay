@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit autotools bash-completion-r1 linux-info optfeature systemd verify-sig
+inherit bash-completion-r1 linux-info optfeature systemd verify-sig
 
 DESCRIPTION="Fast, dense and secure container management"
 HOMEPAGE="https://linuxcontainers.org/lxd/introduction/ https://github.com/lxc/lxd"
@@ -12,18 +12,20 @@ SRC_URI="https://linuxcontainers.org/downloads/lxd/${P}.tar.gz
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE="apparmor ipv6 nls tools verify-sig"
 
-DEPEND="app-arch/xz-utils
+DEPEND="acct-group/lxd
+	app-arch/xz-utils
 	>=app-emulation/lxc-3.0.0[apparmor?,seccomp(+)]
 	dev-libs/dqlite
 	dev-libs/lzo
 	dev-libs/raft[lz4]
 	>=dev-util/xdelta-3.0[lzma(+)]
-	net-dns/dnsmasq[dhcp,ipv6?]"
+	net-dns/dnsmasq[dhcp,ipv6?]
+	sys-libs/libcap
+	virtual/udev"
 RDEPEND="${DEPEND}
-	acct-group/lxd
 	net-firewall/ebtables
 	net-firewall/iptables[ipv6?]
 	sys-apps/iproute2[ipv6?]
@@ -67,6 +69,10 @@ EGO_PN="github.com/lxc/lxd"
 GOPATH="${S}/_dist" # this seems to reset every now and then, though
 
 VERIFY_SIG_OPENPGP_KEY_PATH=${BROOT}/usr/share/openpgp-keys/linuxcontainers.asc
+
+# The testsuite must be run as root.
+# make: *** [Makefile:156: check] Error 1
+RESTRICT="test"
 
 src_prepare() {
 	default
@@ -128,9 +134,7 @@ src_compile() {
 }
 
 src_test() {
-	export GOPATH="${S}/_dist"
-	export GO111MODULE=off
-	go test -v ${EGO_PN}/lxd || die
+	emake check
 }
 
 src_install() {
@@ -160,6 +164,10 @@ src_install() {
 
 	systemd_newunit "${FILESDIR}"/lxd-containers-4.0.0.service lxd-containers.service
 	systemd_newunit "${FILESDIR}"/lxd-4.0.0.socket lxd.socket
+
+	# Temporary fix for #817287
+	keepdir /var/log/lxd
+	fowners root:lxd /var/log/lxd
 
 	dodoc AUTHORS doc/*
 	use nls && domo po/*.mo
