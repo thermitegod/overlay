@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
-IUSE="deprecated +nls +startup-notification +xxhash"
+IUSE="deprecated +startup-notification +xxhash"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
@@ -50,7 +50,6 @@ DEPEND="${RDEPEND}
 src_configure() {
 	meson_src_configure \
 		$(meson_use startup-notification sn) \
-		$(meson_use nls nls) \
 		$(meson_use deprecated deprecated-hw) \
 		$(meson_use xxhash xxhash)
 
