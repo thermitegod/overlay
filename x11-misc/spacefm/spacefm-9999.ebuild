@@ -40,6 +40,7 @@ RDEPEND="dev-libs/glib:2
 	x11-libs/gtk+:3
 	startup-notification? ( x11-libs/startup-notification )
 	xfce-base/exo
+	dev-libs/libfmt
 	"
 DEPEND="${RDEPEND}
 	dev-util/intltool
