@@ -8,7 +8,7 @@ PYTHON_REQ_USE="threads(+)"
 
 inherit distutils-r1 toolchain-funcs elisp-common
 
-MY_V="3.0.0a9"
+MY_V="3.0.0a10"
 
 DESCRIPTION="A Python to C compiler"
 HOMEPAGE="https://cython.org https://pypi.org/project/Cython/
