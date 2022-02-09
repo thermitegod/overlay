@@ -1,41 +1,40 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-inherit bash-completion-r1 linux-info optfeature systemd verify-sig
+inherit bash-completion-r1 go-module linux-info optfeature systemd
 
 DESCRIPTION="Fast, dense and secure container management"
 HOMEPAGE="https://linuxcontainers.org/lxd/introduction/ https://github.com/lxc/lxd"
-SRC_URI="https://linuxcontainers.org/downloads/lxd/${P}.tar.gz
-	verify-sig? ( https://linuxcontainers.org/downloads/lxd/${P}.tar.gz.asc )"
+SRC_URI="https://linuxcontainers.org/downloads/lxd/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="apparmor ipv6 nls tools verify-sig"
+IUSE="apparmor ipv6 nls tools"
 
 DEPEND="acct-group/lxd
 	app-arch/xz-utils
 	>=app-containers/lxc-3.0.0[apparmor?,seccomp(+)]
+	dev-db/sqlite:3
 	dev-libs/dqlite
 	dev-libs/lzo
 	dev-libs/raft[lz4]
 	>=dev-util/xdelta-3.0[lzma(+)]
-	net-dns/dnsmasq[dhcp,ipv6?]
+	net-dns/dnsmasq[dhcp,ipv6(+)?]
 	sys-libs/libcap
 	virtual/udev"
 RDEPEND="${DEPEND}
 	net-firewall/ebtables
-	net-firewall/iptables[ipv6?]
-	sys-apps/iproute2[ipv6?]
+	net-firewall/iptables[ipv6(+)?]
+	sys-apps/iproute2[ipv6(+)?]
 	sys-fs/fuse:*
 	sys-fs/lxcfs
 	sys-fs/squashfs-tools[lzma]
 	virtual/acl"
 BDEPEND="dev-lang/go
-	nls? ( sys-devel/gettext )
-	verify-sig? ( app-crypt/openpgp-keys-linuxcontainers )"
+	nls? ( sys-devel/gettext )"
 
 CONFIG_CHECK="
 	~CGROUPS
@@ -46,15 +45,23 @@ CONFIG_CHECK="
 	~SECCOMP
 	~USER_NS
 	~UTS_NS
+
+	~KVM
+	~MACVTAP
+	~VHOST_VSOCK
 "
 
-#RESTRICT="mirror"
+RESTRICT="mirror"
 
 ERROR_IPC_NS="CONFIG_IPC_NS is required."
 ERROR_NET_NS="CONFIG_NET_NS is required."
 ERROR_PID_NS="CONFIG_PID_NS is required."
 ERROR_SECCOMP="CONFIG_SECCOMP is required."
 ERROR_UTS_NS="CONFIG_UTS_NS is required."
+
+WARNING_KVM="CONFIG_KVM and CONFIG_KVM_AMD/-INTEL is required for virtual machines."
+WARNING_MACVTAP="CONFIG_MACVTAP is required for virtual machines."
+WARNING_VHOST_VSOCK="CONFIG_VHOST_VSOCK is required for virtual machines."
 
 # Go magic.
 QA_PREBUILT="/usr/bin/fuidshift
@@ -65,19 +72,17 @@ QA_PREBUILT="/usr/bin/fuidshift
 	/usr/bin/lxd-p2c
 	/usr/sbin/lxd"
 
-EGO_PN="github.com/lxc/lxd"
-GOPATH="${S}/_dist" # this seems to reset every now and then, though
-
-VERIFY_SIG_OPENPGP_KEY_PATH=${BROOT}/usr/share/openpgp-keys/linuxcontainers.asc
-
 # The testsuite must be run as root.
 # make: *** [Makefile:156: check] Error 1
 RESTRICT="test"
 
-src_prepare() {
-	default
+EGO_PN="github.com/lxc/lxd"
+GOPATH="${S}/_dist"
 
+src_prepare() {
 	export GOPATH="${S}/_dist"
+
+	default
 
 	sed -i \
 		-e "s:\./configure:./configure --prefix=/usr --libdir=${EPREFIX}/usr/lib/lxd:g" \
@@ -89,20 +94,19 @@ src_prepare() {
 		-e "s:/usr/share/OVMF:/usr/share/edk2-ovmf:g" \
 		-e "s:OVMF_VARS.ms.fd:OVMF_VARS.secboot.fd:g" \
 		doc/environment.md \
+		lxd/apparmor/instance.go \
 		lxd/apparmor/instance_qemu.go \
 		lxd/instance/drivers/driver_qemu.go || die "Failed to fix hardcoded ovmf paths."
 
-	# Fix hardcoded virtfs-proxy-helper file path, see bug 798924
-	sed -i \
-		-e "s:/usr/lib/qemu/virtfs-proxy-helper:/usr/libexec/virtfs-proxy-helper:g" \
-		lxd/device/disk.go || die "Failed to fix virtfs-proxy-helper path."
-
-	cp "${FILESDIR}"/lxd-4.0.7-r1.service "${T}"/lxd.service || die
+	cp "${FILESDIR}"/lxd-4.0.9-r1.service "${T}"/lxd.service || die
 	if use apparmor; then
 		sed -i \
 			'/^EnvironmentFile=.*/a ExecStartPre=\/usr\/libexec\/lxc\/lxc-apparmor-load' \
 			"${T}"/lxd.service || die
 	fi
+
+	# Disable -Werror's from go modules.
+	find "${S}" -name "cgo.go" -exec sed -i "s/ -Werror / /g" {} + || die
 }
 
 src_configure() { :; }
@@ -138,8 +142,8 @@ src_test() {
 }
 
 src_install() {
-	local bindir="_dist/bin"
 	export GOPATH="${S}/_dist"
+	local bindir="_dist/bin"
 
 	dosbin ${bindir}/lxd
 
@@ -158,18 +162,14 @@ src_install() {
 	newbashcomp scripts/bash/lxd-client lxc
 
 	newconfd "${FILESDIR}"/lxd-4.0.0.confd lxd
-	newinitd "${FILESDIR}"/lxd-4.0.0.initd lxd
+	newinitd "${FILESDIR}"/lxd-4.0.9.initd lxd
 
 	systemd_dounit "${T}"/lxd.service
 
 	systemd_newunit "${FILESDIR}"/lxd-containers-4.0.0.service lxd-containers.service
 	systemd_newunit "${FILESDIR}"/lxd-4.0.0.socket lxd.socket
 
-	# Temporary fix for #817287
-	keepdir /var/log/lxd
-	fowners root:lxd /var/log/lxd
-
-	dodoc AUTHORS doc/*
+	# dodoc doc/*
 	use nls && domo po/*.mo
 }
 
@@ -177,9 +177,12 @@ pkg_postinst() {
 	elog
 	elog "Consult https://wiki.gentoo.org/wiki/LXD for more information,"
 	elog "including a Quick Start."
+	elog "For virtual machine support, see:"
+	elog "https://wiki.gentoo.org/wiki/LXD#Virtual_machines"
 	elog
 	elog "Please run 'lxc-checkconfig' to see all optional kernel features."
 	elog
+	optfeature "virtual machine support" app-emulation/qemu[spice,usbredir,virtfs]
 	optfeature "btrfs storage backend" sys-fs/btrfs-progs
 	optfeature "lvm2 storage backend" sys-fs/lvm2
 	optfeature "zfs storage backend" sys-fs/zfs

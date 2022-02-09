@@ -6,10 +6,12 @@ Documentation=man:lxd(1)
 
 [Service]
 EnvironmentFile=-/etc/environment
-ExecStartPre=/usr/libexec/lxc/lxc-apparmor-load
-ExecStart=/usr/sbin/lxd --group lxd --logfile=/var/log/lxd/lxd.log
+ExecStart=/usr/sbin/lxd --group lxd --syslog
 ExecStartPost=/usr/sbin/lxd waitready --timeout=600
+ExecStartPre=/bin/mkdir -p /var/log/lxd
+ExecStartPre=/bin/chown -R root:lxd /var/log/lxd
 KillMode=process
+PermissionsStartOnly=true
 TimeoutStartSec=600s
 TimeoutStopSec=30s
 Restart=on-failure
