@@ -1,4 +1,4 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -23,7 +23,8 @@ IUSE="deprecated +startup-notification +xxhash"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
-RDEPEND="dev-libs/glib:2
+RDEPEND="
+	dev-libs/glib:2
 	dev-util/desktop-file-utils
 	>=dev-util/meson-0.49.0
 	dev-libs/libbsd
@@ -41,6 +42,9 @@ RDEPEND="dev-libs/glib:2
 	startup-notification? ( x11-libs/startup-notification )
 	xfce-base/exo
 	dev-libs/libfmt
+	dev-cpp/glibmm:2.68
+	dev-cpp/gtkmm:3.0
+	dev-libs/spdlog
 	"
 DEPEND="${RDEPEND}
 	dev-util/intltool
