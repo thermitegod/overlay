@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
-IUSE="deprecated +startup-notification +xxhash"
+IUSE="deprecated"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
@@ -37,9 +37,7 @@ RDEPEND="
 	x11-libs/pango
 	x11-libs/libX11
 	x11-misc/shared-mime-info
-	xxhash? ( dev-libs/xxhash )
 	x11-libs/gtk+:3
-	startup-notification? ( x11-libs/startup-notification )
 	xfce-base/exo
 	dev-libs/libfmt
 	dev-cpp/glibmm:2.68
@@ -54,9 +52,7 @@ DEPEND="${RDEPEND}
 
 src_configure() {
 	meson_src_configure \
-		$(meson_use startup-notification sn) \
-		$(meson_use deprecated deprecated-hw) \
-		$(meson_use xxhash xxhash)
+		$(meson_use deprecated deprecated-hw)
 
 }
 
