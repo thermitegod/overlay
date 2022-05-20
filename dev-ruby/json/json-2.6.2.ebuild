@@ -11,14 +11,14 @@ RUBY_FAKEGEM_GEMSPEC="json.gemspec"
 
 RUBY_FAKEGEM_EXTENSIONS=(ext/json/ext/parser/extconf.rb ext/json/ext/generator/extconf.rb)
 
-inherit multilib ruby-fakegem
+inherit ruby-fakegem
 
 DESCRIPTION="A JSON implementation as a Ruby extension"
 HOMEPAGE="https://github.com/flori/json"
 SRC_URI="https://github.com/flori/json/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="Ruby"
 
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~mips ~ppc ~ppc64 ~riscv ~s390 ~sparc ~x86 ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~loong ~mips ~ppc ~ppc64 ~riscv ~s390 ~sparc ~x86 ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SLOT="2"
 IUSE=""
 
@@ -46,17 +46,4 @@ all_ruby_prepare() {
 
 	# Avoid setting gem since it will not be available yet when installing
 	sed -i -e '/gem/ s:^:#:' tests/test_helper.rb || die
-}
-
-#each_ruby_compile() {
-#	for ext in parser generator ; do
-#		cp ext/json/ext/${ext}/${ext}$(get_modname) ext/json/ext/ || die
-#	done
-#}
-
-each_ruby_install() {
-	each_fakegem_install
-
-	#ruby_fakegem_newins ext/json/ext/generator$(get_modname) lib/json/ext/generator$(get_modname)
-	#ruby_fakegem_newins ext/json/ext/parser$(get_modname) lib/json/ext/parser$(get_modname)
 }
