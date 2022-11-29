@@ -26,13 +26,16 @@ LICENSE="GPL-2"
 SLOT="0"
 IUSE=""
 
+DEPEND=""
 RDEPEND="${DEPEND}
 	dev-python/libarchive-c[${PYTHON_USEDEP}]
-	dev-python/urllib3[${PYTHON_USEDEP}]
-	>=dev-python/pillow-6.0.0[${PYTHON_USEDEP}]
-	>=dev-python/xxhash-0.8.0[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
+	dev-python/pillow[${PYTHON_USEDEP}]
 	dev-python/pyyaml[${PYTHON_USEDEP}]
+	dev-python/regex[${PYTHON_USEDEP}]
+	dev-python/send2trash[${PYTHON_USEDEP}]
+	dev-python/urllib3[${PYTHON_USEDEP}]
+	dev-python/xxhash[${PYTHON_USEDEP}]
 	virtual/jpeg
 	x11-libs/gdk-pixbuf
 	!media-gfx/comix
