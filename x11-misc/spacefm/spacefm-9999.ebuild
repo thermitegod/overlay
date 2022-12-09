@@ -17,7 +17,7 @@ else
 	KEYWORDS="amd64 x86"
 fi
 
-LICENSE="GPL-2 LGPL-2.1"
+LICENSE="GPL-3"
 SLOT="0"
 IUSE="deprecated"
 
@@ -26,9 +26,6 @@ CONFIG_CHECK="~INOTIFY_USER"
 RDEPEND="
 	dev-libs/glib:2
 	dev-util/desktop-file-utils
-	>=dev-util/meson-0.49.0
-	dev-libs/libbsd
-	dev-vcs/git
 	media-video/ffmpegthumbnailer
 	>=virtual/udev-143
 	virtual/freedesktop-icon-theme
@@ -39,14 +36,15 @@ RDEPEND="
 	x11-misc/shared-mime-info
 	x11-libs/gtk+:3
 	xfce-base/exo
-	dev-libs/libfmt
 	dev-cpp/glibmm:2.68
-	dev-cpp/gtkmm:3.0
+	dev-cpp/gtkmm:4.0
 	dev-libs/spdlog
+	dev-libs/libfmt
+	dev-libs/ztd
 	"
 DEPEND="${RDEPEND}
-	dev-util/intltool
-	sys-devel/gettext
+	dev-util/meson
+	dev-util/ninja
 	virtual/pkgconfig
 	"
 
