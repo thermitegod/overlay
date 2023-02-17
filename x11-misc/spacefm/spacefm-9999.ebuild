@@ -32,7 +32,6 @@ RDEPEND="
 	x11-libs/cairo
 	x11-libs/gdk-pixbuf
 	x11-libs/pango
-	x11-libs/libX11
 	x11-misc/shared-mime-info
 	x11-libs/gtk+:3
 	xfce-base/exo
@@ -41,6 +40,8 @@ RDEPEND="
 	dev-libs/spdlog
 	dev-libs/libfmt
 	dev-libs/ztd
+	dev-cpp/magic_enum
+	dev-cpp/toml11
 	"
 DEPEND="${RDEPEND}
 	dev-util/meson
