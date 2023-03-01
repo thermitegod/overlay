@@ -3,22 +3,35 @@
 
 EAPI=8
 
+DISTUTILS_USE_PEP517=setuptools
 PYTHON_COMPAT=( python3_{9..11} )
 
 inherit distutils-r1
 
 DESCRIPTION="Python logging made (stupidly) simple"
-HOMEPAGE="https://github.com/Delgan/loguru"
-SRC_URI="https://github.com/Delgan/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="
+	https://github.com/Delgan/loguru/
+	https://pypi.org/project/loguru/
+"
+SRC_URI="
+	https://github.com/Delgan/loguru/archive/${PV}.tar.gz
+		-> ${P}.gh.tar.gz
+"
 
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc64 ~x86"
 
-RDEPEND="$(python_gen_cond_dep 'dev-python/aiocontextvars[${PYTHON_USEDEP}]' 'python3_6')"
-BDEPEND="test? ( >=dev-python/colorama-0.3.4[${PYTHON_USEDEP}] )"
+BDEPEND="
+	test? (
+		>=dev-python/colorama-0.3.4[${PYTHON_USEDEP}]
+	)
+"
+
+PATCHES=(
+	"${FILESDIR}/0.6.0-typos.patch"
+)
+
 # filesystem buffering tests may fail
 # on tmpfs with 64k PAGESZ, but pass fine on ext4
 distutils_enable_tests pytest
-
-PATCHES=( "${FILESDIR}/0.6.0-typos.patch" )
