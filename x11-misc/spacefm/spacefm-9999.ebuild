@@ -42,6 +42,7 @@ RDEPEND="
 	dev-libs/ztd
 	dev-cpp/magic_enum
 	dev-cpp/toml11
+	dev-libs/pugixml
 	"
 DEPEND="${RDEPEND}
 	dev-util/meson
