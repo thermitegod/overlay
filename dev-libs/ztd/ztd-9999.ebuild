@@ -29,6 +29,7 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	dev-libs/spdlog
 	dev-libs/libfmt
+	dev-libs/openssl
 	"
 
 src_configure() {
