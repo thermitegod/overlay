@@ -52,8 +52,8 @@ DEPEND="${RDEPEND}
 
 src_configure() {
 	meson_src_configure \
-		$(meson_use deprecated deprecated-hw)
-
+		$(meson_use deprecated deprecated)
+		$(meson_use deprecated deprecated-ini-loading)
 }
 
 src_compile() {
