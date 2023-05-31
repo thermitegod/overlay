@@ -39,7 +39,7 @@ RDEPEND="
 	dev-cpp/gtkmm:4.0
 	dev-libs/spdlog
 	dev-libs/libfmt
-	dev-libs/ztd
+	dev-cpp/ztd
 	dev-cpp/magic_enum
 	dev-cpp/toml11
 	dev-libs/pugixml

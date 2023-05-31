@@ -5,17 +5,16 @@ EAPI=8
 
 inherit meson
 
-DESCRIPTION="CPP Util Lib"
+DESCRIPTION="ztd is a C++20 (or later) misc utility library"
 HOMEPAGE="https://github.com/thermitegod/ztd"
 
 if [[ "${PV}" == "9999" ]]; then
 	inherit git-r3
 	EGIT_REPO_URI="https://github.com/thermitegod/${PN}.git"
-	KEYWORDS="amd64 x86"
-	# KEYWORDS=""
+	KEYWORDS="~alpha amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sparc x86 ~amd64-linux ~x86-linux"
 else
 	SRC_URI="https://github.com/thermitegod/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
-	KEYWORDS="amd64 x86"
+	KEYWORDS="~alpha amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sparc x86 ~amd64-linux ~x86-linux"
 fi
 
 LICENSE="GPL-3"
