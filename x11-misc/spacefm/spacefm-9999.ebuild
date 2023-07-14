@@ -42,7 +42,9 @@ RDEPEND="
 	dev-cpp/ztd
 	dev-cpp/magic_enum
 	dev-cpp/toml11
+	dev-cpp/cli11
 	dev-libs/pugixml
+	net-libs/zmqpp
 	"
 DEPEND="${RDEPEND}
 	dev-util/meson
@@ -53,7 +55,6 @@ DEPEND="${RDEPEND}
 src_configure() {
 	meson_src_configure \
 		$(meson_use deprecated deprecated)
-		$(meson_use deprecated deprecated-ini-loading)
 }
 
 src_compile() {
@@ -73,24 +74,13 @@ pkg_postinst() {
 	xdg_icon_cache_update
 
 	einfo
-	elog "To mount as non-root user you need one of the following:"
-	elog "  sys-apps/udevil (recommended, see below)"
-	elog "  sys-apps/pmount"
-	elog "  sys-fs/udisks:0"
-	elog "  sys-fs/udisks:2"
-	elog "To support ftp/nfs/smb/ssh URLs in the path bar you may need:"
-	elog "  sys-apps/udevil"
+	elog "To mount as non-root user you need the following:"
+	elog "  sys-fs/udiskie"
 	elog "Other optional dependencies:"
 	elog "  sys-apps/dbus"
 	elog "  sys-process/lsof (device processes)"
 	elog "  virtual/eject (eject media)"
 	einfo
-	if ! has_version 'sys-fs/udisks' ; then
-		elog "When using SpaceFM without udisks, and without the udisks-daemon running,"
-		elog "you may need to enable kernel polling for device media changes to be detected."
-		elog "See /usr/share/doc/${PF}/html/spacefm-manual-en.html#devices-kernpoll"
-		einfo
-	fi
 }
 
 pkg_postrm() {
