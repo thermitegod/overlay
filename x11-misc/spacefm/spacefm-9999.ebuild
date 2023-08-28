@@ -42,6 +42,7 @@ RDEPEND="
 	dev-cpp/ztd
 	dev-cpp/magic_enum
 	dev-cpp/toml11
+	dev-cpp/nlohmann_json
 	dev-cpp/cli11
 	dev-libs/pugixml
 	net-libs/zmqpp
