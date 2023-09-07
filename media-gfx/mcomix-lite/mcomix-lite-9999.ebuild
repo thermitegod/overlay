@@ -24,20 +24,19 @@ fi
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE=""
+IUSE="webp"
 
 DEPEND=""
 RDEPEND="${DEPEND}
 	dev-python/libarchive-c[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
-	dev-python/pillow[${PYTHON_USEDEP}]
 	dev-python/pyyaml[${PYTHON_USEDEP}]
 	dev-python/regex[${PYTHON_USEDEP}]
 	dev-python/send2trash[${PYTHON_USEDEP}]
 	dev-python/urllib3[${PYTHON_USEDEP}]
-	dev-python/xxhash[${PYTHON_USEDEP}]
 	virtual/jpeg
 	x11-libs/gdk-pixbuf
+	webp? ( gui-libs/gdk-pixbuf-loader-webp )
 	!media-gfx/comix
 	!media-gfx/mcomix"
 
