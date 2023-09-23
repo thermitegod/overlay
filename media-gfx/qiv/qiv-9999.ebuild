@@ -12,7 +12,7 @@ EGIT_REPO_URI="https://github.com/thermitegod/neoqiv"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="exif lcms magic"
+IUSE="exif lcms magic webp"
 
 RDEPEND="
 	>=dev-util/meson-0.49.0
@@ -24,6 +24,7 @@ RDEPEND="
 		media-libs/tiff:0
 		virtual/jpeg:0
 	)
+	webp? ( gui-libs/gdk-pixbuf-loader-webp )
 	magic? ( sys-apps/file )"
 
 DEPEND="${RDEPEND}
@@ -45,3 +46,14 @@ src_install() {
 
 	domenu qiv.desktop
 }
+
+pkg_postinst() {
+	xdg_mimeinfo_database_update
+	xdg_desktop_database_update
+}
+
+pkg_postrm() {
+	xdg_mimeinfo_database_update
+	xdg_desktop_database_update
+}
+
