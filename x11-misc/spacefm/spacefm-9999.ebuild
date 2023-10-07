@@ -33,10 +33,10 @@ RDEPEND="
 	x11-libs/gdk-pixbuf
 	x11-libs/pango
 	x11-misc/shared-mime-info
+	x11-misc/xdg-utils
 	x11-libs/gtk+:3
+	dev-cpp/gtkmm:3.0
 	xfce-base/exo
-	dev-cpp/glibmm:2.68
-	dev-cpp/gtkmm:4.0
 	dev-libs/spdlog
 	dev-libs/libfmt
 	dev-cpp/ztd
@@ -75,8 +75,10 @@ pkg_postinst() {
 	xdg_icon_cache_update
 
 	einfo
-	elog "To mount as non-root user you need the following:"
+	elog "To mount you need the following:"
 	elog "  sys-fs/udiskie"
+	elog "To open, create, and extract archives:"
+	elog "  app-arch/file-roller"
 	elog "Other optional dependencies:"
 	elog "  sys-apps/dbus"
 	elog "  sys-process/lsof (device processes)"
