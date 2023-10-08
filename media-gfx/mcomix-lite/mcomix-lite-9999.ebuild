@@ -30,10 +30,12 @@ DEPEND=""
 RDEPEND="${DEPEND}
 	dev-python/libarchive-c[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
-	dev-python/pyyaml[${PYTHON_USEDEP}]
 	dev-python/regex[${PYTHON_USEDEP}]
 	dev-python/send2trash[${PYTHON_USEDEP}]
 	dev-python/urllib3[${PYTHON_USEDEP}]
+	dev-libs/libbytesize[python,${PYTHON_USEDEP}]
+	dev-python/tomli[${PYTHON_USEDEP}]
+	dev-python/tomli-w[${PYTHON_USEDEP}]
 	virtual/jpeg
 	x11-libs/gdk-pixbuf
 	webp? ( gui-libs/gdk-pixbuf-loader-webp )
