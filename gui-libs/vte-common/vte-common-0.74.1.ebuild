@@ -18,6 +18,8 @@ KEYWORDS="~amd64 ~arm ~arm64 ~ia64 ~loong ~ppc ~ppc64 ~riscv ~sparc ~x86"
 # Upstream is hostile and refuses to upload tarballs.
 SRC_URI="https://gitlab.gnome.org/GNOME/vte/-/archive/${PV}/vte-${PV}.tar.bz2"
 
+S="${WORKDIR}/vte-${PV}"
+
 DEPEND="
 	|| ( >=gui-libs/gtk-4.0.1:4 >=x11-libs/gtk+-3.24.22:3 )
 	>=x11-libs/cairo-1.0
@@ -39,8 +41,6 @@ BDEPEND="
 	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/vte-${PV}"
 
 src_prepare() {
 	default
