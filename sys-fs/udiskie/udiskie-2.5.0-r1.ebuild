@@ -12,12 +12,13 @@ HOMEPAGE="https://pypi.org/project/udiskie/ https://github.com/coldfix/udiskie"
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~x86"
-IUSE=""
+IUSE="libnotify"
 
 RDEPEND="dev-python/docopt[${PYTHON_USEDEP}]
 	dev-python/pygobject:3[${PYTHON_USEDEP}]
 	dev-python/pyyaml[${PYTHON_USEDEP}]
-	sys-fs/udisks:2"
+	sys-fs/udisks:2
+	libnotify? ( x11-libs/libnotify[introspection] )"
 DEPEND="app-text/asciidoc
 	test? ( dev-python/keyutils[${PYTHON_USEDEP}] )"
 
