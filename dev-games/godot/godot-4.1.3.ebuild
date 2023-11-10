@@ -12,7 +12,7 @@ SRC_URI="
 	https://downloads.tuxfamily.org/godotengine/${PV}/${P}-stable.tar.xz
 	https://github.com/godotengine/godot/releases/download/${PV}-stable/${P}-stable.tar.xz
 "
-S="${WORKDIR}/${P}-stable"
+S=${WORKDIR}/${P}-stable
 
 LICENSE="
 	MIT
