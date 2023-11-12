@@ -11,7 +11,7 @@ EAPI=8
 # Please bump them together!
 
 PYTHON_COMPAT=( python3_{10..12} )
-VERIFY_SIG_OPENPGP_KEY_PATH="${BROOT}"/usr/share/openpgp-keys/libvirt.org.asc
+VERIFY_SIG_OPENPGP_KEY_PATH=/usr/share/openpgp-keys/libvirt.org.asc
 inherit meson linux-info python-any-r1 readme.gentoo-r1 tmpfiles verify-sig
 
 if [[ ${PV} = *9999* ]]; then
@@ -144,7 +144,7 @@ PDEPEND="
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-9.4.0-fix_paths_in_libvirt-guests_sh.patch
-	"${FILESDIR}"/${PN}-9.4.0-do-not-use-sysconfig.patch
+	"${FILESDIR}"/${PN}-9.9.0-do-not-use-sysconfig.patch
 	"${FILESDIR}"/${PN}-9.6.0-fix-paths-for-apparmor.patch
 )
 
