@@ -134,6 +134,7 @@ src_compile() {
 		# is actually used, so "enable" deleted builtins on disabled deps
 		builtin_brotli=no
 		builtin_certs=no
+		builtin_clipper2=yes # not packaged
 		builtin_embree=$(usex !gui yes $(usex !tools yes $(usex !raycast)))
 		builtin_enet=yes # bundled copy is patched for IPv6+DTLS support
 		builtin_freetype=no
