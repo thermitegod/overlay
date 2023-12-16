@@ -38,6 +38,7 @@ PATCHES=(
 	"${FILESDIR}/${P}-ump-header-detection.patch" # bug #913573, backport
 	"${FILESDIR}/${P}-pcm-fix-segfault-32bit-libs.patch" # backport
 	"${FILESDIR}/${P}-reshuffle-included-files-config-h.patch" # backport
+	"${FILESDIR}/${P}-lld-17.patch" # bug #914511, backport
 )
 
 pkg_setup() {
