@@ -18,7 +18,7 @@ if [[ ${PV} == *9999* ]]; then
 	inherit git-r3
 else
 	SRC_URI="https://virt-manager.org/download/sources/${PN}/${P}.tar.gz"
-	KEYWORDS="amd64 ~arm64 ~ppc64 x86"
+	KEYWORDS="~amd64 ~arm64 ~ppc64 ~x86"
 fi
 
 LICENSE="GPL-2"
@@ -27,7 +27,7 @@ IUSE="gui policykit sasl"
 
 RDEPEND="
 	${PYTHON_DEPS}
-	app-cdr/cdrtools
+	|| ( dev-libs/libisoburn app-cdr/cdrtools )
 	>=app-emulation/libvirt-glib-1.0.0[introspection]
 	>=sys-libs/libosinfo-0.2.10[introspection]
 	$(python_gen_cond_dep '
