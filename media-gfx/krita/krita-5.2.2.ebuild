@@ -1,18 +1,17 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 ECM_TEST="forceoptional"
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{10..11} )
 KFMIN=5.82.0
 QTMIN=5.15.5
 VIRTUALX_REQUIRED="test"
 inherit ecm kde.org python-single-r1
 
 if [[ ${KDE_BUILD_TYPE} = release ]]; then
-	SRC_URI="mirror://kde/stable/${PN}/${PV}/${P}.tar.xz
-	https://dev.gentoo.org/~asturm/distfiles/${P}-exiv2-0.28.patch.xz"
+	SRC_URI="mirror://kde/stable/${PN}/${PV}/${P}.tar.xz"
 	KEYWORDS="amd64 ~arm64 ~ppc64 ~riscv ~x86"
 fi
 
@@ -21,7 +20,7 @@ HOMEPAGE="https://apps.kde.org/krita/ https://krita.org/en/"
 
 LICENSE="GPL-3"
 SLOT="5"
-IUSE="color-management fftw gif +gsl heif jpegxl +mypaint-brush-engine openexr pdf qtmedia +raw webp"
+IUSE="color-management fftw gif +gsl heif jpegxl +mypaint-brush-engine openexr openjpeg pdf media +raw +xsimd webp"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # bug 630508
@@ -74,22 +73,31 @@ RDEPEND="${PYTHON_DEPS}
 	heif? ( >=media-libs/libheif-1.11:=[x265] )
 	mypaint-brush-engine? ( media-libs/libmypaint:= )
 	openexr? ( media-libs/openexr:= )
+	openjpeg? ( media-libs/openjpeg:= )
 	pdf? ( app-text/poppler[qt5] )
-	qtmedia? ( >=dev-qt/qtmultimedia-${QTMIN}:5 )
-	raw? ( media-libs/libraw:= )
+	media? ( media-libs/mlt:= )
+	raw? ( kde-apps/libkdcraw:= )
+	xsimd? ( dev-cpp/xsimd )
 	webp? ( >=media-libs/libwebp-1.2.0:= )
+
 "
 DEPEND="${RDEPEND}"
 BDEPEND="
 	dev-cpp/eigen:3
 	dev-lang/perl
 	sys-devel/gettext
+
+	dev-cpp/immer
+	dev-cpp/lager
+	dev-cpp/zug
+
+	dev-libs/libunibreak
 "
 
 PATCHES=(
 	"${FILESDIR}/${PN}-4.3.1-tests-optional.patch"
-	"${WORKDIR}/${P}-exiv2-0.28.patch" # bug 906472
-	"${FILESDIR}/${P}-ocio-2.3.0.patch" # bug 915107
+	"${FILESDIR}/${PN}-fftw.patch"
+	"${FILESDIR}/${PN}-openjpeg.patch"
 )
 
 pkg_setup() {
@@ -106,7 +114,6 @@ src_configure() {
 		-DENABLE_UPDATERS=OFF
 		-DKRITA_ENABLE_PCH=OFF # big mess.
 		-DCMAKE_DISABLE_FIND_PACKAGE_KSeExpr=ON # not packaged
-		-DCMAKE_DISABLE_FIND_PACKAGE_xsimd=ON # not packaged
 		$(cmake_use_find_package color-management OpenColorIO)
 		$(cmake_use_find_package fftw FFTW3)
 		$(cmake_use_find_package gif GIF)
@@ -115,9 +122,11 @@ src_configure() {
 		$(cmake_use_find_package jpegxl JPEGXL)
 		$(cmake_use_find_package mypaint-brush-engine LibMyPaint)
 		$(cmake_use_find_package openexr OpenEXR)
+		$(cmake_use_find_package openjpeg OpenJPEG)
 		$(cmake_use_find_package pdf Poppler)
-		$(cmake_use_find_package qtmedia Qt5Multimedia)
-		$(cmake_use_find_package raw LibRaw)
+		$(cmake_use_find_package media Mlt7)
+		$(cmake_use_find_package raw KF5KDcraw)
+		$(cmake_use_find_package xsimd xsimd)
 		$(cmake_use_find_package webp WebP)
 	)
 
