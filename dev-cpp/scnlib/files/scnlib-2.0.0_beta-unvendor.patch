@@ -1,0 +1,92 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fbdd60b..d430e64 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -141,7 +141,6 @@ target_include_directories(scn
+ target_link_libraries(scn
+         PRIVATE
+             simdutf::simdutf
+-            fast_float
+         )
+ set_library_flags(scn)
+
+@@ -152,7 +151,7 @@ add_library(scn_internal INTERFACE)
+ target_link_libraries(scn_internal
+         INTERFACE
+             scn::scn
+-            simdutf::simdutf fast_float
++            simdutf::simdutf
+ )
+ target_include_directories(scn_internal
+         INTERFACE
+diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
+index b97d570..f232dc1 100644
+--- a/cmake/dependencies.cmake
++++ b/cmake/dependencies.cmake
+@@ -53,52 +53,8 @@ if (SCN_BENCHMARKS)
+     list(APPEND SCN_OPTIONAL_DEPENDENCIES "google-benchmark")
+ endif()
+
+-# simdutf
+-
+-FetchContent_Declare(
+-        simdutf
+-        GIT_REPOSITORY  https://github.com/simdutf/simdutf.git
+-        GIT_TAG         v4.0.3
+-        GIT_SHALLOW     TRUE
+-)
+-
+-# simdutf CMake includes tests if BUILD_TESTING is globally ON
+-# we don't want to include tests of dependencies, so we need to do some manual work
+-
+-set(SIMDUTF_BENCHMARKS_BEFORE_SIMDUTF ${SIMDUTF_BENCHMARKS})
+-set(BUILD_TESTING_BEFORE_SIMDUTF ${BUILD_TESTING})
+-
+-set(SIMDUTF_BENCHMARKS OFF)
+-set(BUILD_TESTING OFF)
+-
+-FetchContent_GetProperties(simdutf)
+-if(NOT simdutf_POPULATED)
+-    FetchContent_Populate(simdutf)
+-
+-    add_subdirectory(${simdutf_SOURCE_DIR} ${simdutf_BINARY_DIR} EXCLUDE_FROM_ALL)
+-endif()
+-
+-set(SIMDUTF_BENCHMARKS ${SIMDUTF_BENCHMARKS_BEFORE_SIMDUTF})
+-set(BUILD_TESTING ${BUILD_TESTING_BEFORE_SIMDUTF})
+-
+-# fast_float
+-
+-cmake_policy(SET CMP0077 NEW)
+-FetchContent_Declare(
+-        fast_float
+-        GIT_REPOSITORY  https://github.com/fastfloat/fast_float.git
+-        GIT_TAG         v5.2.0
+-        GIT_SHALLOW     TRUE
+-)
+-
+-set(FASTFLOAT_INSTALL OFF CACHE INTERNAL "")
+-
+-FetchContent_GetProperties(fast_float)
+-if(NOT fast_float_POPULATED)
+-    FetchContent_Populate(fast_float)
+-
+-    add_subdirectory(${fast_float_SOURCE_DIR} ${fast_float_BINARY_DIR} EXCLUDE_FROM_ALL)
+-endif()
++find_package(simdutf REQUIRED)
++find_package(FastFloat REQUIRED)
+
+ # make available
+
+diff --git a/cmake/install.cmake b/cmake/install.cmake
+index b9e8fd4..627b084 100644
+--- a/cmake/install.cmake
++++ b/cmake/install.cmake
+@@ -7,7 +7,6 @@ set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/scn)
+
+ install(TARGETS
+             scn
+-            fast_float simdutf
+         EXPORT scn-targets
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
