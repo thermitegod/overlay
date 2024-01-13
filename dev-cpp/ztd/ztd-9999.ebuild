@@ -21,14 +21,17 @@ LICENSE="GPL-3"
 SLOT="0"
 IUSE=""
 
-RDEPEND="
+BDEPEND="
+	dev-build/ninja
 	dev-util/meson
-	dev-util/ninja
-	"
-DEPEND="${RDEPEND}
+	virtual/pkgconfig
+"
+RDEPEND="
+	dev-libs/libfmt
 	dev-libs/spdlog
 	dev-libs/openssl
-	"
+"
+DEPEND="${RDEPEND}"
 
 src_configure() {
 	meson_src_configure
