@@ -18,6 +18,7 @@ RESTRICT="!test? ( test ) test"
 
 src_configure() {
 	local mycmakeargs=(
+		-DCMAKE_CXX_STANDARD=20
 		-Dtoml11_BUILD_TEST=$(usex test)
 		-Dtoml11_INSTALL=ON
 	)
