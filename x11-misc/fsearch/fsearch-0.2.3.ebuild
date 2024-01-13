@@ -15,18 +15,18 @@ LICENSE="GPL-2"
 SLOT="0"
 IUSE=""
 
+BDEPEND="
+	dev-build/ninja
+	dev-util/meson
+	virtual/pkgconfig
+"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/icu
 	dev-libs/libpcre2
 	x11-libs/gtk+:3
 "
-
-DEPEND="${RDEPEND}
-	dev-util/meson
-	dev-util/ninja
-	virtual/pkgconfig
-	"
+DEPEND="${RDEPEND}"
 
 src_configure() {
 	meson_src_configure
