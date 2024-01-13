@@ -23,6 +23,11 @@ IUSE="deprecated"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
+BDEPEND="
+	dev-build/ninja
+	dev-util/meson
+	virtual/pkgconfig
+"
 RDEPEND="
 	dev-libs/glib:2
 	dev-util/desktop-file-utils
@@ -47,11 +52,7 @@ RDEPEND="
 	dev-libs/pugixml
 	net-libs/zmqpp
 	"
-DEPEND="${RDEPEND}
-	dev-util/meson
-	dev-util/ninja
-	virtual/pkgconfig
-	"
+DEPEND="${RDEPEND}"
 
 src_configure() {
 	meson_src_configure \
@@ -91,3 +92,4 @@ pkg_postrm() {
 	xdg_mimeinfo_database_update
 	xdg_icon_cache_update
 }
+

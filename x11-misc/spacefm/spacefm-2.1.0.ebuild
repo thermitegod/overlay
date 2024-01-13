@@ -23,9 +23,16 @@ IUSE="deprecated +gtk2 gtk3 +nls +startup-notification +xxhash"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
-RDEPEND="dev-libs/glib:2
+BDEPEND="
+	dev-build/ninja
+	dev-util/meson
+	dev-util/intltool
+	sys-devel/gettext
+	virtual/pkgconfig
+"
+RDEPEND="
+	dev-libs/glib:2
 	dev-util/desktop-file-utils
-	>=dev-util/meson-0.49.0
 	dev-libs/libbsd
 	dev-vcs/git
 	media-video/ffmpegthumbnailer
@@ -40,12 +47,8 @@ RDEPEND="dev-libs/glib:2
 	gtk2? ( gtk3? ( x11-libs/gtk+:3 ) !gtk3? ( x11-libs/gtk+:2 ) )
 	!gtk2? ( x11-libs/gtk+:3 )
 	startup-notification? ( x11-libs/startup-notification )
-	"
-DEPEND="${RDEPEND}
-	dev-util/intltool
-	sys-devel/gettext
-	virtual/pkgconfig
-	"
+"
+DEPEND="${RDEPEND}"
 
 src_configure() {
 	meson_src_configure \
@@ -100,3 +103,4 @@ pkg_postrm() {
 	xdg_mimeinfo_database_update
 	xdg_icon_cache_update
 }
+
