@@ -25,7 +25,7 @@ CONFIG_CHECK="~INOTIFY_USER"
 
 BDEPEND="
 	dev-build/ninja
-	dev-util/meson
+	dev-build/meson
 	dev-util/intltool
 	sys-devel/gettext
 	virtual/pkgconfig

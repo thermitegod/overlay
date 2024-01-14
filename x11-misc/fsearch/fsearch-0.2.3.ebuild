@@ -17,7 +17,7 @@ IUSE=""
 
 BDEPEND="
 	dev-build/ninja
-	dev-util/meson
+	dev-build/meson
 	virtual/pkgconfig
 "
 RDEPEND="

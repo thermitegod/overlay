@@ -14,8 +14,12 @@ SLOT="0"
 KEYWORDS=""
 IUSE="exif lcms magic webp"
 
+BDEPEND="
+	dev-build/ninja
+	dev-build/meson
+	virtual/pkgconfig
+"
 RDEPEND="
-	>=dev-util/meson-0.49.0
 	media-libs/imlib2[X]
 	>=x11-libs/gtk+-2.12:2
 	exif? ( media-libs/libexif )
@@ -25,10 +29,9 @@ RDEPEND="
 		virtual/jpeg:0
 	)
 	webp? ( gui-libs/gdk-pixbuf-loader-webp )
-	magic? ( sys-apps/file )"
-
-DEPEND="${RDEPEND}
-	virtual/pkgconfig"
+	magic? ( sys-apps/file )
+"
+DEPEND="${RDEPEND}"
 
 src_configure() {
 	meson_src_configure \

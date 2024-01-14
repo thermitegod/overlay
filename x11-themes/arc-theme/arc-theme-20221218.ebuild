@@ -24,7 +24,7 @@ SASSC_DEPEND="dev-lang/sassc"
 # Updates will therefore break existing installs but there's no way around this.
 BDEPEND="
 	${PYTHON_DEPS}
-	>=dev-util/meson-0.56.0
+	dev-build/meson
 	cinnamon? (
 		${SASSC_DEPEND}
 		gnome-extra/cinnamon
