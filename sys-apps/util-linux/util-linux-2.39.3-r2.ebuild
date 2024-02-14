@@ -1,11 +1,11 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 PYTHON_COMPAT=( python3_{10..12} )
 
-inherit toolchain-funcs libtool flag-o-matic bash-completion-r1 usr-ldscript \
+inherit toolchain-funcs libtool flag-o-matic bash-completion-r1 \
 	pam python-r1 multilib-minimal multiprocessing systemd
 
 MY_PV="${PV/_/-}"
@@ -66,7 +66,7 @@ BDEPEND="
 		app-text/po4a
 		sys-devel/gettext
 	)
-	test? ( sys-devel/bc )
+	test? ( app-alternatives/bc )
 "
 DEPEND="
 	${RDEPEND}
@@ -99,6 +99,8 @@ RESTRICT="!test? ( test )"
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.39.2-fincore-test.patch
+	"${FILESDIR}"/${PN}-2.39.2-backport-pr2251.patch
+	"${FILESDIR}"/${PN}-2.39.2-backport-1d4456d.patch
 )
 
 pkg_pretend() {
@@ -149,6 +151,7 @@ src_prepare() {
 			lsfd/mkfds-rw-character-device
 			# Fails with network-sandbox at least in nspawn
 			lsfd/option-inet
+			utmp/last-ipv6
 		)
 
 		local known_failing_test
@@ -353,11 +356,6 @@ multilib_src_install() {
 
 	# This needs to be called AFTER python_install call, bug #689190
 	emake DESTDIR="${D}" install
-
-	if multilib_is_native_abi ; then
-		# Need the libs in /
-		gen_usr_ldscript -a blkid fdisk mount smartcols uuid
-	fi
 }
 
 multilib_src_install_all() {
