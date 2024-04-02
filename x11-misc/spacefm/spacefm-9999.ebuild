@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="deprecated"
+IUSE="deprecated +socket +media"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
@@ -47,16 +47,24 @@ RDEPEND="
 	dev-cpp/ztd
 	dev-cpp/magic_enum
 	dev-cpp/toml11
-	dev-cpp/nlohmann_json
 	dev-cpp/cli11
+	dev-cpp/concurrencpp
 	dev-libs/pugixml
-	net-libs/zmqpp
+	socket? (
+		dev-cpp/nlohmann_json
+		net-libs/zmqpp
+	)
+	media? (
+		media-libs/gexiv2
+	)
 	"
 DEPEND="${RDEPEND}"
 
 src_configure() {
 	meson_src_configure \
 		$(meson_use deprecated deprecated)
+		$(meson_use socket socket)
+		$(meson_use media media)
 }
 
 src_compile() {
