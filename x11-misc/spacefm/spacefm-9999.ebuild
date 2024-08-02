@@ -29,6 +29,7 @@ BDEPEND="
 	virtual/pkgconfig
 "
 RDEPEND="
+	app-arch/file-roller
 	dev-libs/glib:2
 	dev-util/desktop-file-utils
 	media-video/ffmpegthumbnailer
