@@ -30,6 +30,10 @@ BDEPEND="
 DEPEND=""
 RDEPEND="${DEPEND}"
 
+PATCHES=(
+	"${FILESDIR}/${PN}-force_std-format.patch"
+)
+
 multilib_src_prepare() {
 	cmake_src_prepare
 	rm -r include/spdlog/fmt/bundled || die "Failed to delete bundled libfmt"
