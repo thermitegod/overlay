@@ -18,9 +18,7 @@ RESTRICT="binchecks strip"
 BDEPEND="media-gfx/icon-slicer"
 
 src_install() {
-	#emake DESTDIR="${ED}" install
 	emake DESTDIR="${ED}/usr" install
-	#emake DESTDIR="${EROOT}/usr" install
 	einstalldocs
 }
 
