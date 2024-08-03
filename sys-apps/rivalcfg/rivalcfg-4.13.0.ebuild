@@ -18,6 +18,8 @@ LICENSE="WTFPL"
 SLOT="0"
 IUSE=""
 
+RESTRICT="test"
+
 RDEPEND="${DEPEND}
 	dev-python/setuptools[${PYTHON_USEDEP}]
 	dev-python/hidapi[${PYTHON_USEDEP}]
