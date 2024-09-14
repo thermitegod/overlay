@@ -53,7 +53,7 @@ RDEPEND="
 	dev-libs/pugixml
 	socket? (
 		dev-cpp/nlohmann_json
-		net-libs/zmqpp
+		net-libs/cppzmq
 	)
 	media? (
 		media-libs/gexiv2
