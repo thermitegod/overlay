@@ -3,15 +3,14 @@
 
 EAPI=8
 
-DISTUTILS_USE_PEP517=setuptools
+DISTUTILS_EXT=1
+DISTUTILS_USE_PEP517=meson-python
 PYTHON_COMPAT=( python3_{10..13} )
 
 inherit distutils-r1 xdg-utils
 
 DESCRIPTION="A fork of mcomix, a GTK3 image viewer for comic book archives"
 HOMEPAGE="https://github.com/thermitegod/mcomix-lite"
-
-DISTUTILS_USE_SETUPTOOLS=pyproject.toml
 
 if [[ "${PV}" == "9999" ]]; then
 	inherit git-r3
@@ -28,6 +27,7 @@ IUSE="webp"
 
 DEPEND=""
 RDEPEND="${DEPEND}
+	dev-python/pybind11[${PYTHON_USEDEP}]
 	dev-python/libarchive-c[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
 	dev-python/regex[${PYTHON_USEDEP}]
@@ -42,16 +42,18 @@ RDEPEND="${DEPEND}
 	!media-gfx/comix
 	!media-gfx/mcomix"
 
-src_prepare() {
-	distutils-r1_src_prepare
+BDEPEND="
+	${RDEPEND}
+	>=dev-build/meson-1.1.0
+"
+
+python_install_all() {
+	doman man/mcomix.1
+
+	# meson-python does not install non wheel files.
+	# this is suboptimal.
+	mv share "${ED}"/usr/share || die
+
+	distutils-r1_python_install_all
 }
 
-pkg_postinst() {
-	xdg_mimeinfo_database_update
-	xdg_desktop_database_update
-}
-
-pkg_postrm() {
-	xdg_mimeinfo_database_update
-	xdg_desktop_database_update
-}
