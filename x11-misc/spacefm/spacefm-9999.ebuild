@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="deprecated +socket +media"
+IUSE="deprecated +socket +media +system-cli11 +system-concurrencpp +system-magic-enum +system-spdlog system-toml11 +system-ztd"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
@@ -29,11 +29,10 @@ BDEPEND="
 	virtual/pkgconfig
 "
 RDEPEND="
-	app-arch/file-roller
 	dev-libs/glib:2
 	dev-util/desktop-file-utils
 	media-video/ffmpegthumbnailer
-	>=virtual/udev-143
+	virtual/udev
 	virtual/freedesktop-icon-theme
 	x11-libs/cairo
 	x11-libs/gdk-pixbuf
@@ -43,29 +42,38 @@ RDEPEND="
 	x11-libs/gtk+:3
 	dev-cpp/gtkmm:3.0
 	xfce-base/exo
-	dev-libs/spdlog
-	dev-libs/libfmt
-	dev-cpp/ztd
-	dev-cpp/magic_enum
-	dev-cpp/toml11
-	dev-cpp/cli11
-	dev-cpp/concurrencpp
 	dev-libs/pugixml
 	socket? (
 		dev-cpp/nlohmann_json
 		net-libs/cppzmq
 	)
-	media? (
-		media-libs/gexiv2
-	)
-	"
+	media? ( media-libs/gexiv2 )
+	system-cli11? ( dev-cpp/cli11 )
+	system-concurrencpp? ( dev-cpp/concurrencpp )
+	system-magic-enum? ( dev-cpp/magic_enum )
+	system-spdlog? ( dev-libs/spdlog )
+	system-toml11? ( dev-cpp/toml11 )
+	system-ztd? ( >=dev-cpp/ztd-0.4.0 )
+"
 DEPEND="${RDEPEND}"
 
+RDEPEND="
+	app-arch/file-roller
+"
+
 src_configure() {
-	meson_src_configure \
+	local emesonargs=(
 		$(meson_use deprecated deprecated)
 		$(meson_use socket socket)
 		$(meson_use media media)
+		$(meson_use system-cli11 with-system-cli11)
+		$(meson_use system-concurrencpp with-system-concurrencpp)
+		$(meson_use system-magic-enum with-system-magic-enum)
+		$(meson_use system-spdlog with-system-spdlog)
+		$(meson_use system-toml11 with-system-toml11)
+		$(meson_use system-ztd with-system-ztd)
+	)
+	meson_src_configure
 }
 
 src_compile() {
@@ -89,10 +97,6 @@ pkg_postinst() {
 	elog "  sys-fs/udiskie"
 	elog "To open, create, and extract archives:"
 	elog "  app-arch/file-roller"
-	elog "Other optional dependencies:"
-	elog "  sys-apps/dbus"
-	elog "  sys-process/lsof (device processes)"
-	elog "  virtual/eject (eject media)"
 	einfo
 }
 
