@@ -52,7 +52,7 @@ python_install_all() {
 
 	# meson-python does not install non wheel files.
 	# this is suboptimal.
-	mv share "${ED}"/usr/share || die
+	mv share/* "${ED}"/usr/share || die
 
 	distutils-r1_python_install_all
 }
