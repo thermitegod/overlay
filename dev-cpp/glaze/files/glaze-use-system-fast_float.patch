@@ -1,0 +1,13 @@
+diff --git a/include/glaze/util/glaze_fast_float.hpp b/include/glaze/util/glaze_fast_float.hpp
+index d3c7ed5f..c5175b13 100644
+--- a/include/glaze/util/glaze_fast_float.hpp
++++ b/include/glaze/util/glaze_fast_float.hpp
+@@ -5,7 +5,7 @@
+ 
+ // This is an adapter to speed up the parsing portion of the fast_float conversion
+ 
+-#include "glaze/util/fast_float.hpp"
++#include <fast_float/fast_float.h>
+ #include "glaze/util/inline.hpp"
+ 
+ namespace glz
