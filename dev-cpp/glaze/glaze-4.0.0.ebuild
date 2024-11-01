@@ -16,20 +16,9 @@ KEYWORDS="amd64 ~arm ~arm64 ~ppc64 ~riscv ~sparc ~x86"
 CPU_USE=( cpu_flags_x86_avx2 )
 IUSE="${CPU_USE[@]}"
 
-BDEPEND="
-	dev-cpp/fast_float
-"
+BDEPEND=""
 RDEPEND=""
 DEPEND="${RDEPEND}"
-
-PATCHES=(
-	"${FILESDIR}/${PN}-use-system-fast_float.patch"
-)
-
-src_prepare() {
-	rm -r include/glaze/util/fast_float.hpp || die "Failed to delete bundled fast_float"
-	cmake_src_prepare
-}
 
 src_configure() {
 	if use amd64 ; then
