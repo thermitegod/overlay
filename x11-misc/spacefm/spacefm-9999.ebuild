@@ -48,7 +48,7 @@ RDEPEND="
 	system-cli11? ( dev-cpp/cli11 )
 	system-concurrencpp? ( dev-cpp/concurrencpp )
 	system-glaze? ( dev-cpp/glaze )
-	system-magic-enum? ( dev-cpp/magic_enum )
+	system-magic-enum? ( >=dev-cpp/magic_enum-0.9.7 )
 	system-spdlog? ( dev-libs/spdlog )
 	system-toml11? ( dev-cpp/toml11 )
 	system-ztd? ( >=dev-cpp/ztd-0.4.0 )
