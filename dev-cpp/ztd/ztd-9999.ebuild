@@ -30,6 +30,7 @@ RDEPEND="
 	dev-libs/libfmt
 	dev-libs/spdlog
 	dev-libs/openssl
+	>=dev-cpp/magic_enum-0.9.7
 "
 DEPEND="${RDEPEND}"
 
