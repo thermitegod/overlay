@@ -42,6 +42,7 @@ RDEPEND="
 	x11-libs/gtk+:3
 	dev-cpp/gtkmm:3.0
 	xfce-base/exo
+	dev-libs/botan
 	dev-libs/pugixml
 	socket? ( net-libs/cppzmq )
 	media? ( media-libs/gexiv2 )
