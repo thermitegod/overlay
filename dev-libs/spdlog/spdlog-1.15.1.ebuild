@@ -1,4 +1,4 @@
-# Copyright 1999-2024 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -18,7 +18,7 @@ fi
 
 LICENSE="MIT"
 SLOT="0/$(ver_cut 1-2)"
-IUSE="test static-libs"
+IUSE="test"
 RESTRICT="!test? ( test )"
 
 BDEPEND="
@@ -44,7 +44,7 @@ multilib_src_configure() {
 		-DSPDLOG_BUILD_BENCH=no
 		-DSPDLOG_BUILD_EXAMPLE=no
 		-DSPDLOG_USE_STD_FORMAT=yes
-		-DSPDLOG_BUILD_SHARED=$(usex static-libs)
+		-DSPDLOG_BUILD_SHARED=yes
 		-DSPDLOG_BUILD_TESTS=$(usex test)
 	)
 
