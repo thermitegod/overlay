@@ -1,0 +1,14 @@
+diff --git a/meson.build b/meson.build
+new file mode 100644
+index 0000000..938a092
+--- /dev/null
++++ b/meson.build
+@@ -0,0 +1,8 @@
++project('nanobench', 'cpp')
++
++install_data(
++  'src/include/nanobench.h',
++  install_dir: '/usr/include/nanobench',
++  rename: 'nanobench.hpp'
++)
++
