@@ -29,6 +29,7 @@ DEPEND=""
 RDEPEND="${DEPEND}
 	dev-python/pybind11[${PYTHON_USEDEP}]
 	dev-python/libarchive-c[${PYTHON_USEDEP}]
+	dev-python/platformdirs[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
 	dev-python/regex[${PYTHON_USEDEP}]
 	dev-python/send2trash[${PYTHON_USEDEP}]
