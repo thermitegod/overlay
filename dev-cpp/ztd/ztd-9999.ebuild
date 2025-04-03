@@ -5,7 +5,7 @@ EAPI=8
 
 inherit meson
 
-DESCRIPTION="ztd is a C++20 (or later) misc utility library"
+DESCRIPTION="ztd is a C++23 (or later) misc utility library"
 HOMEPAGE="https://github.com/thermitegod/ztd"
 
 if [[ "${PV}" == "9999" ]]; then
@@ -27,7 +27,6 @@ BDEPEND="
 	virtual/pkgconfig
 "
 RDEPEND="
-	dev-libs/openssl
 	>=dev-cpp/magic_enum-0.9.7
 "
 DEPEND="${RDEPEND}"
