@@ -62,7 +62,6 @@ RDEPEND="
 
 src_configure() {
 	local emesonargs=(
-		$(meson_use deprecated deprecated)
 		$(meson_use socket socket)
 		$(meson_use media media)
 		$(meson_use system-cli11 with-system-cli11)
@@ -70,7 +69,6 @@ src_configure() {
 		$(meson_use system-glaze with-system-glaze)
 		$(meson_use system-magic-enum with-system-magic-enum)
 		$(meson_use system-spdlog with-system-spdlog)
-		$(meson_use system-toml11 with-system-toml11)
 		$(meson_use system-ztd with-system-ztd)
 	)
 	meson_src_configure
