@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -7,7 +7,7 @@ DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=meson-python
 PYTHON_COMPAT=( python3_{11..14} )
 
-inherit distutils-r1 xdg-utils
+inherit meson distutils-r1 xdg-utils
 
 DESCRIPTION="A fork of mcomix, a GTK3 image viewer for comic book archives"
 HOMEPAGE="https://github.com/thermitegod/mcomix-lite"
@@ -27,7 +27,6 @@ IUSE="webp"
 
 DEPEND=""
 RDEPEND="${DEPEND}
-	dev-python/pybind11[${PYTHON_USEDEP}]
 	dev-python/libarchive-c[${PYTHON_USEDEP}]
 	dev-python/platformdirs[${PYTHON_USEDEP}]
 	dev-python/loguru[${PYTHON_USEDEP}]
