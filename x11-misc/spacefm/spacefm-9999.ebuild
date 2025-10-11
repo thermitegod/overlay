@@ -1,4 +1,4 @@
-# Copyright 1999-2024 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="deprecated +socket +media +system-cli11 +system-concurrencpp +system-glaze +system-magic-enum +system-spdlog system-toml11 +system-ztd"
+IUSE="deprecated +socket +media +system-cli11 +system-concurrencpp +system-glaze +system-magic-enum +system-spdlog +system-ztd"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
@@ -39,9 +39,11 @@ RDEPEND="
 	x11-libs/pango
 	x11-misc/shared-mime-info
 	x11-misc/xdg-utils
+	xfce-base/exo
 	x11-libs/gtk+:3
 	dev-cpp/gtkmm:3.0
-	xfce-base/exo
+	gui-libs/gtk:4
+	dev-cpp/gtkmm:4.0
 	dev-libs/botan
 	dev-libs/pugixml
 	socket? ( net-libs/cppzmq )
@@ -51,7 +53,6 @@ RDEPEND="
 	system-glaze? ( dev-cpp/glaze )
 	system-magic-enum? ( >=dev-cpp/magic_enum-0.9.7 )
 	system-spdlog? ( dev-libs/spdlog )
-	system-toml11? ( dev-cpp/toml11 )
 	system-ztd? ( >=dev-cpp/ztd-0.4.0 )
 "
 DEPEND="${RDEPEND}"
