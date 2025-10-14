@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="deprecated +socket +media +system-cli11 +system-concurrencpp +system-glaze +system-magic-enum +system-spdlog +system-ztd"
+IUSE="deprecated +socket +media +system-cli11 +system-concurrencpp +system-glaze +system-magic-enum +system-ztd"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
@@ -52,7 +52,6 @@ RDEPEND="
 	system-concurrencpp? ( dev-cpp/concurrencpp )
 	system-glaze? ( dev-cpp/glaze )
 	system-magic-enum? ( >=dev-cpp/magic_enum-0.9.7 )
-	system-spdlog? ( dev-libs/spdlog )
 	system-ztd? ( >=dev-cpp/ztd-0.4.0 )
 "
 DEPEND="${RDEPEND}"
@@ -69,8 +68,8 @@ src_configure() {
 		$(meson_use system-concurrencpp with-system-concurrencpp)
 		$(meson_use system-glaze with-system-glaze)
 		$(meson_use system-magic-enum with-system-magic-enum)
-		$(meson_use system-spdlog with-system-spdlog)
 		$(meson_use system-ztd with-system-ztd)
+		-Dwith-system-spdlog=false
 	)
 	meson_src_configure
 }
