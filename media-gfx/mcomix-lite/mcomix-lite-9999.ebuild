@@ -3,13 +3,9 @@
 
 EAPI=8
 
-DISTUTILS_EXT=1
-DISTUTILS_USE_PEP517=meson-python
-PYTHON_COMPAT=( python3_{11..14} )
+inherit linux-info xdg-utils meson
 
-inherit meson distutils-r1 xdg-utils
-
-DESCRIPTION="A fork of mcomix, a GTK3 image viewer for comic book archives"
+DESCRIPTION="A fork of mcomix, a GTK4 image viewer for manga and comic book archives"
 HOMEPAGE="https://github.com/thermitegod/mcomix-lite"
 
 if [[ "${PV}" == "9999" ]]; then
@@ -21,23 +17,17 @@ else
 	KEYWORDS="amd64 x86"
 fi
 
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 IUSE="webp"
 
-DEPEND=""
 RDEPEND="${DEPEND}
-	dev-python/libarchive-c[${PYTHON_USEDEP}]
-	dev-python/platformdirs[${PYTHON_USEDEP}]
-	dev-python/loguru[${PYTHON_USEDEP}]
-	dev-python/regex[${PYTHON_USEDEP}]
-	dev-python/send2trash[${PYTHON_USEDEP}]
-	dev-python/urllib3[${PYTHON_USEDEP}]
-	dev-libs/libbytesize[python,${PYTHON_USEDEP}]
-	dev-python/tomli[${PYTHON_USEDEP}]
-	dev-python/tomli-w[${PYTHON_USEDEP}]
-	virtual/jpeg
-	x11-libs/gdk-pixbuf
+	dev-cpp/cli11
+	dev-cpp/glaze
+	dev-libs/spdlog
+	>=dev-cpp/magic_enum-0.9.7
+	>=dev-cpp/ztd-0.4.0
+	dev-cpp/gtkmm:4.0
 	webp? ( gui-libs/gdk-pixbuf-loader-webp )
 	!media-gfx/comix
 	!media-gfx/mcomix"
@@ -46,14 +36,14 @@ BDEPEND="
 	${RDEPEND}
 	>=dev-build/meson-1.1.0
 "
+DEPEND="${RDEPEND}"
 
-python_install_all() {
-	doman man/mcomix.1
-
-	# meson-python does not install non wheel files.
-	# this is suboptimal.
-	mv share/* "${ED}"/usr/share || die
-
-	distutils-r1_python_install_all
+src_configure() {
+	local emesonargs=(
+		-Dwith-system-spdlog=true
+		-Dwith-system-glaze=true
+		-Dwith-system-spdlog=true
+    )
+	meson_src_configure
 }
 
