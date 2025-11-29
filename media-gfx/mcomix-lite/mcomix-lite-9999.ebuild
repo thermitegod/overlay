@@ -43,7 +43,19 @@ src_configure() {
 		-Dwith-system-spdlog=true
 		-Dwith-system-glaze=true
 		-Dwith-system-spdlog=true
-    )
+	)
 	meson_src_configure
+}
+
+pkg_postinst() {
+	xdg_desktop_database_update
+	xdg_mimeinfo_database_update
+	xdg_icon_cache_update
+}
+
+pkg_postrm() {
+	xdg_desktop_database_update
+	xdg_mimeinfo_database_update
+	xdg_icon_cache_update
 }
 
