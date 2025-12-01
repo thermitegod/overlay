@@ -13,7 +13,7 @@ MY_PV=${PV/_/.}
 MY_P=glycin-${MY_PV}
 TEST_IMAGE_COMMIT=b148bcf70847d6f126a8e83e27e1c59d2e474adf
 
-DESCRIPTION="Sandboxed and extendable image loading"
+DESCRIPTION="Loaders for glycin clients (glycin crate or libglycin)"
 HOMEPAGE="https://gitlab.gnome.org/GNOME/glycin/"
 # upstream release tarballs are useless, as upstream is deliberately
 # stripping glycin crate from them
