@@ -64,8 +64,6 @@ src_configure() {
 	local emesonargs=(
 		$(meson_use socket socket)
 		$(meson_use media media)
-		$(meson_use system-cli11 with-system-cli11)
-		$(meson_use system-concurrencpp with-system-concurrencpp)
 		$(meson_use system-glaze with-system-glaze)
 		$(meson_use system-magic-enum with-system-magic-enum)
 		$(meson_use system-ztd with-system-ztd)
