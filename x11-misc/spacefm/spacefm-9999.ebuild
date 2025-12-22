@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="deprecated +socket +media +system-cli11 +system-concurrencpp +system-glaze +system-magic-enum +system-ztd"
+IUSE="deprecated +socket +media"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
@@ -34,25 +34,19 @@ RDEPEND="
 	media-video/ffmpegthumbnailer
 	virtual/udev
 	virtual/freedesktop-icon-theme
-	x11-libs/cairo
-	x11-libs/gdk-pixbuf
-	x11-libs/pango
 	x11-misc/shared-mime-info
 	x11-misc/xdg-utils
 	xfce-base/exo
-	x11-libs/gtk+:3
 	dev-cpp/gtkmm:3.0
-	gui-libs/gtk:4
 	dev-cpp/gtkmm:4.0
 	dev-libs/botan
 	dev-libs/pugixml
+	dev-cpp/cli11
+	dev-cpp/glaze
+	>=dev-cpp/magic_enum-0.9.7
+	>=dev-cpp/ztd-0.4.0
 	socket? ( net-libs/cppzmq )
 	media? ( media-libs/gexiv2 )
-	system-cli11? ( dev-cpp/cli11 )
-	system-concurrencpp? ( dev-cpp/concurrencpp )
-	system-glaze? ( dev-cpp/glaze )
-	system-magic-enum? ( >=dev-cpp/magic_enum-0.9.7 )
-	system-ztd? ( >=dev-cpp/ztd-0.4.0 )
 "
 DEPEND="${RDEPEND}"
 
@@ -64,10 +58,8 @@ src_configure() {
 	local emesonargs=(
 		$(meson_use socket socket)
 		$(meson_use media media)
-		$(meson_use system-glaze with-system-glaze)
-		$(meson_use system-magic-enum with-system-magic-enum)
-		$(meson_use system-ztd with-system-ztd)
-		-Dwith-system-spdlog=false
+		-Dwith-system-glaze=true
+		-Dwith-system-ztd=true
 	)
 	meson_src_configure
 }
