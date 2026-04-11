@@ -19,45 +19,52 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="deprecated +socket +media"
+IUSE="gtk3 +gtk4 deprecated +socket +media"
+REQUIRED_USE="|| ( gtk3 gtk4 )"
 
 CONFIG_CHECK="~INOTIFY_USER"
+
+RDEPEND=""
+
+DEPEND="${RDEPEND}
+	dev-libs/glib:2
+	dev-util/desktop-file-utils
+	media-video/ffmpeg
+	media-video/ffmpegthumbnailer
+	virtual/udev
+	virtual/freedesktop-icon-theme
+	x11-misc/shared-mime-info
+	x11-misc/xdg-utils
+	dev-libs/botan
+	dev-libs/pugixml
+	dev-cpp/cli11
+	>=dev-cpp/glaze-7.0.0
+	>=dev-cpp/magic_enum-0.9.7
+	>=dev-cpp/ztd-0.4.0
+	gtk3? (
+		dev-cpp/gtkmm:4.0
+		dev-cpp/gtkmm:3.0
+		xfce-base/exo
+	)
+	gtk4? (
+		dev-cpp/gtkmm:4.0
+	)
+	socket? ( net-libs/cppzmq )
+	media? ( media-libs/gexiv2 )
+"
 
 BDEPEND="
 	dev-build/ninja
 	dev-build/meson
 	virtual/pkgconfig
 "
-RDEPEND="
-	dev-libs/glib:2
-	dev-util/desktop-file-utils
-	media-video/ffmpegthumbnailer
-	virtual/udev
-	virtual/freedesktop-icon-theme
-	x11-misc/shared-mime-info
-	x11-misc/xdg-utils
-	xfce-base/exo
-	dev-cpp/gtkmm:3.0
-	dev-cpp/gtkmm:4.0
-	dev-libs/botan
-	dev-libs/pugixml
-	dev-cpp/cli11
-	dev-cpp/glaze
-	>=dev-cpp/magic_enum-0.9.7
-	>=dev-cpp/ztd-0.4.0
-	socket? ( net-libs/cppzmq )
-	media? ( media-libs/gexiv2 )
-"
-DEPEND="${RDEPEND}"
-
-RDEPEND="
-	app-arch/file-roller
-"
 
 src_configure() {
 	local emesonargs=(
 		$(meson_use socket socket)
 		$(meson_use media media)
+		$(meson_use gtk4 gtk4)
+		$(meson_use gtk3 gtk3)
 		-Dwith-system-glaze=true
 		-Dwith-system-ztd=true
 	)
