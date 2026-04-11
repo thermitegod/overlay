@@ -19,9 +19,12 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="webp"
+IUSE="+webp"
 
-RDEPEND="${DEPEND}
+RDEPEND=""
+
+DEPEND="${RDEPEND}
+	dev-libs/botan
 	dev-cpp/cli11
 	dev-cpp/glaze
 	dev-libs/spdlog
@@ -30,13 +33,15 @@ RDEPEND="${DEPEND}
 	dev-cpp/gtkmm:4.0
 	webp? ( gui-libs/gdk-pixbuf-loader-webp )
 	!media-gfx/comix
-	!media-gfx/mcomix"
+	!media-gfx/mcomix
+"
 
 BDEPEND="
-	${RDEPEND}
-	>=dev-build/meson-1.1.0
+	dev-build/ninja
+	dev-build/meson
+	virtual/pkgconfig
 "
-DEPEND="${RDEPEND}"
+
 
 src_configure() {
 	local emesonargs=(
