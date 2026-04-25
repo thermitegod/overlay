@@ -29,6 +29,7 @@ RDEPEND=""
 DEPEND="${RDEPEND}
 	dev-libs/glib:2
 	dev-util/desktop-file-utils
+	media-libs/glycin
 	media-video/ffmpeg
 	media-video/ffmpegthumbnailer
 	virtual/udev
