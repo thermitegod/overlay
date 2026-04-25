@@ -31,6 +31,7 @@ DEPEND="${RDEPEND}
 	>=dev-cpp/magic_enum-0.9.7
 	>=dev-cpp/ztd-0.4.0
 	dev-cpp/gtkmm:4.0
+	media-libs/glycin
 	webp? ( gui-libs/gdk-pixbuf-loader-webp )
 	!media-gfx/comix
 	!media-gfx/mcomix
