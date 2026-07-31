@@ -19,8 +19,7 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="gtk3 +gtk4 deprecated +socket +media"
-REQUIRED_USE="|| ( gtk3 gtk4 )"
+IUSE="deprecated +socket +media"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
@@ -42,14 +41,7 @@ DEPEND="${RDEPEND}
 	>=dev-cpp/glaze-7.0.0
 	>=dev-cpp/magic_enum-0.9.7
 	>=dev-cpp/ztd-0.4.0
-	gtk3? (
-		dev-cpp/gtkmm:4.0
-		dev-cpp/gtkmm:3.0
-		xfce-base/exo
-	)
-	gtk4? (
-		dev-cpp/gtkmm:4.0
-	)
+	dev-cpp/gtkmm:4.0
 	socket? ( net-libs/cppzmq )
 	media? ( media-libs/gexiv2 )
 "
@@ -64,23 +56,10 @@ src_configure() {
 	local emesonargs=(
 		$(meson_use socket socket)
 		$(meson_use media media)
-		$(meson_use gtk4 gtk4)
-		$(meson_use gtk3 gtk3)
 		-Dwith-system-glaze=true
 		-Dwith-system-ztd=true
 	)
 	meson_src_configure
-}
-
-src_compile() {
-	meson_src_compile
-}
-
-src_install() {
-	meson_src_install
-	einstalldocs
-	doman doc/*.1
-	doman doc/*.7
 }
 
 pkg_postinst() {
