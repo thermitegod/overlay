@@ -46,9 +46,8 @@ BDEPEND="
 
 src_configure() {
 	local emesonargs=(
-		-Dwith-system-spdlog=true
 		-Dwith-system-glaze=true
-		-Dwith-system-spdlog=true
+		-Dwith-system-ztd=true
 	)
 	meson_src_configure
 }
