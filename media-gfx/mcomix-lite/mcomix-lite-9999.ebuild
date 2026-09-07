@@ -28,7 +28,6 @@ DEPEND="${RDEPEND}
 	dev-cpp/cli11
 	dev-cpp/glaze
 	dev-libs/spdlog
-	>=dev-cpp/magic_enum-0.9.7
 	>=dev-cpp/ztd-0.4.0
 	dev-cpp/gtkmm:4.0
 	media-libs/glycin
