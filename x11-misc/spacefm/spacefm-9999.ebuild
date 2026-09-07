@@ -39,7 +39,6 @@ DEPEND="${RDEPEND}
 	dev-libs/pugixml
 	dev-cpp/cli11
 	>=dev-cpp/glaze-7.0.0
-	>=dev-cpp/magic_enum-0.9.7
 	>=dev-cpp/ztd-0.4.0
 	dev-cpp/gtkmm:4.0
 	socket? ( net-libs/cppzmq )
