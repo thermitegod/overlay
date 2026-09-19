@@ -1,0 +1,10 @@
+commit 552db8c07e3532e952042523e0171e494024ffae
+Author: thermitegod <43489010+thermitegod@users.noreply.github.com>
+Date:   2026-09-18 19:29:56 -0700
+
+    DROP
+
+diff --git a/meson.options b/meson_options.txt
+similarity index 100%
+rename from meson.options
+rename to meson_options.txt
