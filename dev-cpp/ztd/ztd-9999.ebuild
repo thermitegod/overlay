@@ -26,9 +26,7 @@ BDEPEND="
 	dev-build/meson
 	virtual/pkgconfig
 "
-RDEPEND="
-	>=dev-cpp/magic_enum-0.9.7
-"
+RDEPEND=""
 DEPEND="${RDEPEND}"
 
 src_configure() {
