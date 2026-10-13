@@ -19,18 +19,18 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="deprecated +socket +media"
+IUSE="deprecated +media"
 
 CONFIG_CHECK="~INOTIFY_USER"
 
 RDEPEND=""
 
 DEPEND="${RDEPEND}
-	dev-libs/glib:2
+	dev-cpp/gtkmm:4.0
+	dev-cpp/glibmm:2.68
 	dev-util/desktop-file-utils
 	media-libs/glycin
 	media-video/ffmpeg
-	media-video/ffmpegthumbnailer
 	virtual/udev
 	virtual/freedesktop-icon-theme
 	x11-misc/shared-mime-info
@@ -40,9 +40,7 @@ DEPEND="${RDEPEND}
 	dev-cpp/cli11
 	>=dev-cpp/glaze-7.0.0
 	>=dev-cpp/ztd-0.4.0
-	dev-cpp/gtkmm:4.0
-	socket? ( net-libs/cppzmq )
-	media? ( media-libs/gexiv2 )
+	media? ( media-libs/gexiv2:0 )
 "
 
 BDEPEND="
@@ -53,7 +51,6 @@ BDEPEND="
 
 src_configure() {
 	local emesonargs=(
-		$(meson_use socket socket)
 		$(meson_use media media)
 		-Dwith-system-glaze=true
 		-Dwith-system-ztd=true
