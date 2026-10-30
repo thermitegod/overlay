@@ -19,19 +19,17 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="+webp"
+IUSE=""
 
 RDEPEND=""
 
 DEPEND="${RDEPEND}
 	dev-libs/botan
-	dev-cpp/cli11
 	dev-cpp/glaze
 	dev-libs/spdlog
 	>=dev-cpp/ztd-0.4.0
 	dev-cpp/gtkmm:4.0
 	media-libs/glycin
-	webp? ( gui-libs/gdk-pixbuf-loader-webp )
 	!media-gfx/comix
 	!media-gfx/mcomix
 "
