@@ -90,10 +90,6 @@ MULTILIB_CHOST_TOOLS=(
 	/usr/bin/gio-querymodules$(get_exeext)
 )
 
-PATCHES=(
-	"${FILESDIR}"/${PN}-2.64.1-mark-gdbus-server-auth-test-flaky.patch
-)
-
 python_check_deps() {
 	if use introspection ; then
 		python_has_version "dev-python/setuptools[${PYTHON_USEDEP}]"
